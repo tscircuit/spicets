@@ -1,12 +1,22 @@
 {
   "name": "spicets",
-  "main": "dist/index.js",
+  "main": "index.ts",
   "version": "0.0.1",
   "type": "module",
   "scripts": {
+    "test": "bun test",
+    "typecheck": "tsc --noEmit"
   },
+  "exports": {
+    ".": {
+      "types": "./index.ts",
+      "default": "./index.ts"
+    }
+  },
+  "types": "./index.ts",
   "devDependencies": {
-    "@types/bun": "latest"
+    "@types/bun": "latest",
+    "typescript": "^5.0.0"
   },
   "peerDependencies": {
     "typescript": "^5"
