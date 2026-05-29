@@ -58,14 +58,12 @@ export class SpiceNetlist extends SpiceNode {
     return this.cards.filter((card): card is AnalysisCommand => card instanceof AnalysisCommand)
   }
 
-  add(card: SpiceCardInput): this {
+  add(card: SpiceCardInput): void {
     this.cards.push(card)
-    return this
   }
 
-  addAll(cards: SpiceCardInput[]): this {
+  addAll(cards: SpiceCardInput[]): void {
     this.cards.push(...cards)
-    return this
   }
 
   findElement(name: string): ElementCard | undefined {
@@ -84,14 +82,13 @@ export class SpiceNetlist extends SpiceNode {
     )
   }
 
-  renameNode(from: string, to: string): this {
+  renameNode(from: string, to: string): void {
     for (const element of this.elements) element.renameNode(from, to)
     for (const subckt of this.subckts) {
       for (const card of subckt.cards) {
         if (card instanceof ElementCard) card.renameNode(from, to)
       }
     }
-    return this
   }
 
   getChildren(): SpiceNode[] {

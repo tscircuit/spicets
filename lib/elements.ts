@@ -31,11 +31,10 @@ export abstract class ElementCard extends SpiceCard {
     this.params = new ParamList(init.params)
   }
 
-  renameNode(from: string, to: string): this {
+  renameNode(from: string, to: string): void {
     for (const node of this.nodes) {
       if (node.name === from) node.name = to
     }
-    return this
   }
 
   getChildren(): SpiceNode[] {

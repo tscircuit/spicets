@@ -177,9 +177,8 @@ export class Subckt extends DotCommand {
     this.endsName = init.endsName
   }
 
-  add(card: SpiceCardInput): this {
+  add(card: SpiceCardInput): void {
     this.cards.push(card)
-    return this
   }
 
   getChildren(): SpiceNode[] {

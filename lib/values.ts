@@ -68,14 +68,13 @@ export class ParamList {
     return this.values.find(([key]) => key.toLowerCase() === name.toLowerCase())?.[1]
   }
 
-  set(name: string, value: SpiceValueInput): this {
+  set(name: string, value: SpiceValueInput): void {
     const index = this.values.findIndex(
       ([key]) => key.toLowerCase() === name.toLowerCase(),
     )
     const entry: [string, SpiceValue] = [name, normalizeValue(value)]
     if (index === -1) this.values.push(entry)
     else this.values[index] = entry
-    return this
   }
 
   delete(name: string): boolean {

@@ -3,8 +3,9 @@ import { ParamList } from "lib"
 
 test("supports ParamList object, tuple, get, set, delete, and stable output", () => {
   const params = new ParamList({ rtop: "10k" })
-  params.set("rbot", "20k")
+  const setResult = params.set("rbot", "20k")
 
+  expect(setResult).toBeUndefined()
   expect(params.get("RTOP")?.getString()).toBe("10k")
   expect(params.getString()).toBe("rtop=10k rbot=20k")
   expect(params.delete("rtop")).toBe(true)

@@ -13,8 +13,9 @@ test("renames nodes across root-level elements and subcircuits", () => {
     trailingNewline: false,
   })
 
-  netlist.renameNode("old", "new")
+  const result = netlist.renameNode("old", "new")
 
+  expect(result).toBeUndefined()
   expect(netlist.getString({ format: "pretty" })).toContain("R1 new 0 1k")
   expect(netlist.getString({ format: "pretty" })).toContain("R2 new out 2k")
 })
