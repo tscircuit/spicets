@@ -1,5 +1,5 @@
 import { expect, test } from "bun:test"
-import { Pwl, Sin } from "../../../index"
+import { Pwl, Sin } from "lib"
 
 test("serializes SIN and PWL source waveforms", () => {
   expect(

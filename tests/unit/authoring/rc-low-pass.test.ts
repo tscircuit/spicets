@@ -1,5 +1,5 @@
 import { expect, test } from "bun:test"
-import { Capacitor, Resistor, SpiceNetlist, Tran, VoltageSource } from "../../../index"
+import { Capacitor, Resistor, SpiceNetlist, Tran, VoltageSource } from "lib"
 
 test("authors an RC low-pass deck from specific card classes", () => {
   const netlist = new SpiceNetlist({

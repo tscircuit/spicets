@@ -1,5 +1,5 @@
 import { expect, test } from "bun:test"
-import { ControlBlock, parseSpiceCards } from "../../../index"
+import { ControlBlock, parseSpiceCards } from "lib"
 
 test("parses control blocks as a single card", () => {
   const [control] = parseSpiceCards(".control\nrun\nplot v(out)\n.endc\n")

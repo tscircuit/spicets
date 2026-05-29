@@ -1,5 +1,5 @@
 import { expect, test } from "bun:test"
-import { Ac, Dc, Op, Tran } from "../../../index"
+import { Ac, Dc, Op, Tran } from "lib"
 
 test("serializes analysis commands", () => {
   expect(new Op().toSource({ format: "pretty" })).toBe(".op")

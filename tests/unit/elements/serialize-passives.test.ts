@@ -1,5 +1,5 @@
 import { expect, test } from "bun:test"
-import { Capacitor, Inductor, Resistor } from "../../../index"
+import { Capacitor, Inductor, Resistor } from "lib"
 
 test("serializes passive element cards", () => {
   expect(

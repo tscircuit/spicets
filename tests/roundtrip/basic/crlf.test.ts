@@ -1,5 +1,5 @@
 import { expect, test } from "bun:test"
-import { parseSpiceNetlist } from "../../../index"
+import { parseSpiceNetlist } from "lib"
 
 test("preserves CRLF line endings", () => {
   const source = "* Windows netlist\r\nR1 in out 10k\r\n.end\r\n"

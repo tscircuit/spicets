@@ -1,5 +1,5 @@
 import { expect, test } from "bun:test"
-import { SpiceExpression, SpiceValue } from "../../../index"
+import { SpiceExpression, SpiceValue } from "lib"
 
 test("keeps values and expressions as source-level strings", () => {
   expect(new SpiceValue("10k").getString()).toBe("10k")

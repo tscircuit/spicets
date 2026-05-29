@@ -1,5 +1,5 @@
 import { expect, test } from "bun:test"
-import { Ac, Dc, Op, Tran, parseSpiceCard } from "../../../index"
+import { Ac, Dc, Op, Tran, parseSpiceCard } from "lib"
 
 test("parses analysis commands into specific classes", () => {
   expect(parseSpiceCard(".op")).toBeInstanceOf(Op)

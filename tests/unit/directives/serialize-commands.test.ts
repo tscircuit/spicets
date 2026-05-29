@@ -1,5 +1,5 @@
 import { expect, test } from "bun:test"
-import { Include, Lib, Measure, Model, Options, Param, Save, Temp } from "../../../index"
+import { Include, Lib, Measure, Model, Options, Param, Save, Temp } from "lib"
 
 test("serializes model, param, include, lib, options, temp, save, and measure", () => {
   expect(new Param({ rload: "10k" }).toSource({ format: "pretty" })).toBe(".param rload=10k")

@@ -1,5 +1,5 @@
 import { expect, test } from "bun:test"
-import { Cccs, Ccvs, SubcktInstance, Vccs, Vcvs, parseSpiceCard } from "../../../index"
+import { Cccs, Ccvs, SubcktInstance, Vccs, Vcvs, parseSpiceCard } from "lib"
 
 test("parses controlled sources and subckt instances into specific classes", () => {
   expect(parseSpiceCard("E1 out 0 in 0 10")).toBeInstanceOf(Vcvs)

@@ -1,5 +1,5 @@
 import { expect, test } from "bun:test"
-import { Model, SpiceLibrary } from "../../../index"
+import { Model, SpiceLibrary } from "lib"
 
 test("serializes spice libraries", () => {
   const library = new SpiceLibrary({

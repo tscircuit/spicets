@@ -1,5 +1,5 @@
 import { expect, test } from "bun:test"
-import { Bjt, Diode, Mosfet } from "../../../index"
+import { Bjt, Diode, Mosfet } from "lib"
 
 test("serializes semiconductor cards", () => {
   expect(

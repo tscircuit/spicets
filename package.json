@@ -1,21 +1,30 @@
 {
   "name": "spicets",
-  "main": "index.ts",
+  "main": "dist/index.js",
   "version": "0.0.1",
   "type": "module",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/tscircuit/spicets"
+  },
+  "files": [
+    "dist"
+  ],
   "scripts": {
+    "build": "tsup-node lib/index.ts --format esm --dts",
     "test": "bun test",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "bunx tsc --noEmit"
   },
   "exports": {
     ".": {
-      "types": "./index.ts",
-      "default": "./index.ts"
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
     }
   },
-  "types": "./index.ts",
+  "types": "./dist/index.d.ts",
   "devDependencies": {
     "@types/bun": "latest",
+    "tsup": "^8.5.0",
     "typescript": "^5.0.0"
   },
   "peerDependencies": {

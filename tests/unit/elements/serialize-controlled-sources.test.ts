@@ -1,5 +1,5 @@
 import { expect, test } from "bun:test"
-import { Cccs, Ccvs, Vccs, Vcvs } from "../../../index"
+import { Cccs, Ccvs, Vccs, Vcvs } from "lib"
 
 test("serializes controlled sources and subckt instances", () => {
   expect(

@@ -1,5 +1,5 @@
 import { expect, test } from "bun:test"
-import { Pulse, VoltageSource } from "../../../index"
+import { Pulse, VoltageSource } from "lib"
 
 test("authors a pulse source without evaluating SPICE values", () => {
   const source = new VoltageSource({

@@ -1,5 +1,5 @@
 import { expect, test } from "bun:test"
-import { Op, SpiceNetlist, Tran } from "../../../index"
+import { Op, SpiceNetlist, Tran } from "lib"
 
 test("supports add and addAll fluent mutation", () => {
   const netlist = new SpiceNetlist({ end: false, trailingNewline: false })

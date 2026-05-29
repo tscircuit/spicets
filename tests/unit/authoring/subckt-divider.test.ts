@@ -1,5 +1,5 @@
 import { expect, test } from "bun:test"
-import { Op, Resistor, SpiceNetlist, Subckt, SubcktInstance, VoltageSource } from "../../../index"
+import { Op, Resistor, SpiceNetlist, Subckt, SubcktInstance, VoltageSource } from "lib"
 
 test("authors a subcircuit and instance with params", () => {
   const divider = new Subckt({

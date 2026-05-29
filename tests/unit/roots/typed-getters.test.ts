@@ -1,5 +1,5 @@
 import { expect, test } from "bun:test"
-import { Model, Resistor, SpiceNetlist, Subckt, Tran, VoltageSource } from "../../../index"
+import { Model, Resistor, SpiceNetlist, Subckt, Tran, VoltageSource } from "lib"
 
 test("exposes ordered cards and typed convenience getters", () => {
   const subckt = new Subckt({ name: "gain", pins: ["in", "out"] })

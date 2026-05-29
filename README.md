@@ -7,6 +7,8 @@ and `getString()` emits deterministic SPICE text.
 
 ## Local Setup
 
+This repository uses [Bun](https://bun.sh) for scripts and testing.
+
 - `bun install`
 - `bun test`
 - `bun run typecheck`
@@ -14,6 +16,7 @@ and `getString()` emits deterministic SPICE text.
 ## Build SPICE Netlists
 
 ```ts
+import { promises as fs } from "node:fs"
 import {
   Capacitor,
   Resistor,
@@ -47,7 +50,7 @@ const netlist = new SpiceNetlist({
   ],
 })
 
-await Bun.write("rc.cir", netlist.getString({ format: "pretty" }))
+await fs.writeFile("rc.cir", netlist.getString({ format: "pretty" }))
 ```
 
 Emits:
@@ -64,9 +67,10 @@ C1 vout 0 100n
 ## Load and Modify Existing Netlists
 
 ```ts
+import { promises as fs } from "node:fs"
 import { Resistor, Tran, parseSpiceNetlist } from "spicets"
 
-const netlist = parseSpiceNetlist(await Bun.file("amplifier.cir").text(), {
+const netlist = parseSpiceNetlist(await fs.readFile("amplifier.cir", "utf8"), {
   dialect: "ngspice",
 })
 
@@ -78,7 +82,7 @@ if (rload instanceof Resistor) {
 
 netlist.add(new Tran({ step: "10n", stop: "10u" }))
 
-await Bun.write("amplifier.cir", netlist.getString())
+await fs.writeFile("amplifier.cir", netlist.getString())
 ```
 
 ## Subcircuits

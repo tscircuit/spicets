@@ -1,5 +1,5 @@
 import { expect, test } from "bun:test"
-import { Resistor, SpiceNetlist, Subckt } from "../../../index"
+import { Resistor, SpiceNetlist, Subckt } from "lib"
 
 test("renames nodes across root-level elements and subcircuits", () => {
   const netlist = new SpiceNetlist({

@@ -1,5 +1,5 @@
 import { expect, test } from "bun:test"
-import { ParamList } from "../../../index"
+import { ParamList } from "lib"
 
 test("supports ParamList object, tuple, get, set, delete, and stable output", () => {
   const params = new ParamList({ rtop: "10k" })

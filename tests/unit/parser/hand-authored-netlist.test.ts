@@ -1,5 +1,5 @@
 import { expect, test } from "bun:test"
-import { Resistor, SpiceNetlist, Tran, VoltageSource } from "../../../index"
+import { Resistor, SpiceNetlist, Tran, VoltageSource } from "lib"
 
 test("serializes hand-authored netlists with specific card classes", () => {
   const netlist = new SpiceNetlist({

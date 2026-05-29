@@ -1,5 +1,5 @@
 import { expect, test } from "bun:test"
-import { Param, Pulse, VoltageSource } from "../../../index"
+import { Param, Pulse, VoltageSource } from "lib"
 
 test("normalizes ergonomic waveform and param inputs", () => {
   const source = new VoltageSource({

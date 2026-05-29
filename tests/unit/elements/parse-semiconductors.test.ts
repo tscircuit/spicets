@@ -1,5 +1,5 @@
 import { expect, test } from "bun:test"
-import { Bjt, Diode, Mosfet, parseSpiceCard } from "../../../index"
+import { Bjt, Diode, Mosfet, parseSpiceCard } from "lib"
 
 test("parses semiconductor cards into specific classes", () => {
   expect(parseSpiceCard("D1 an cath DFAST")).toBeInstanceOf(Diode)

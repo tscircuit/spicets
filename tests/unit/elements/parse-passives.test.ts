@@ -1,5 +1,5 @@
 import { expect, test } from "bun:test"
-import { Capacitor, Inductor, Resistor, parseSpiceCard } from "../../../index"
+import { Capacitor, Inductor, Resistor, parseSpiceCard } from "lib"
 
 test("parses passive element cards into specific classes", () => {
   expect(parseSpiceCard("R1 a b 10k")).toBeInstanceOf(Resistor)

@@ -1,5 +1,5 @@
 import { expect, test } from "bun:test"
-import { CurrentSource, VoltageSource } from "../../../index"
+import { CurrentSource, VoltageSource } from "lib"
 
 test("serializes source cards with DC and AC specs", () => {
   expect(

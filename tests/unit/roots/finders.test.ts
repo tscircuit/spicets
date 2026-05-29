@@ -1,5 +1,5 @@
 import { expect, test } from "bun:test"
-import { Model, Resistor, SpiceNetlist, Subckt } from "../../../index"
+import { Model, Resistor, SpiceNetlist, Subckt } from "lib"
 
 test("finds elements, models, and subcircuits case-insensitively", () => {
   const netlist = new SpiceNetlist({

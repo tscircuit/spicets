@@ -1,5 +1,5 @@
 import { expect, test } from "bun:test"
-import { Op, SpiceNetlist } from "../../../index"
+import { Op, SpiceNetlist } from "lib"
 
 test("supports end serialization modes", () => {
   const netlist = new SpiceNetlist({
