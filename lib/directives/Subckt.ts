@@ -1,4 +1,4 @@
-import { DotCommand, type SpiceNode, type SpiceNodeInit, type SpiceSerializeOptions } from "../ast"
+import { DotCommand, SpiceCard, type SpiceNode, type SpiceNodeInit, type SpiceSerializeOptions } from "../ast"
 import type { SpiceCardInput } from "../roots"
 import type { SpiceLogicalCard } from "../tokens"
 import { SpiceTokenCard } from "../tokens/fromTokens"
@@ -36,10 +36,16 @@ export class Subckt extends DotCommand {
 
   static fromSpiceTokens(card: SpiceLogicalCard): Subckt {
     const tokens = SpiceTokenCard.from(card)
+    const endTokens =
+      card.endCard === undefined ? undefined : SpiceTokenCard.from(card.endCard)
     return new Subckt({
       name: tokens.arg(0) ?? "",
       pins: tokens.argsBeforeKeyword("params:", 1),
       params: tokens.paramsAfterKeyword("params:"),
+      cards: card.childCards?.map(
+        (childCard) => SpiceCard.parseSpiceTokens(childCard) as SpiceCardInput,
+      ),
+      endsName: endTokens?.arg(0),
       originalSource: tokens.originalSource,
     })
   }

@@ -1,4 +1,10 @@
-export { tokensToLogicalCards, significantTokens, tokenValue } from "./logicalCards"
+export {
+  cardHead,
+  groupSpiceBlocks,
+  significantTokens,
+  tokenValue,
+  tokensToLogicalCards,
+} from "./logicalCards"
 export { parseToSpiceTokens } from "./parseToSpiceTokens"
 export { tokenizeSpice } from "./tokenizeSpice"
 export type {

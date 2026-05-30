@@ -122,4 +122,7 @@ export type SpiceLogicalCard = {
   tokens: SpiceToken[]
   originalSource: string
   range: SourceRange
+  leadingNewlineRaw?: "\n" | "\r\n" | "\r"
+  childCards?: SpiceLogicalCard[]
+  endCard?: SpiceLogicalCard
 }

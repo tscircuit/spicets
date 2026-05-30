@@ -1,10 +1,11 @@
+import "./registerAll"
 import { SpiceCard, type SpiceParseOptions } from "./ast"
-import { End, Subckt, ControlBlock } from "./directives"
+import { End } from "./directives"
 import { SpiceLibrary, SpiceNetlist, type SpiceCardInput } from "./roots"
 import {
+  groupSpiceBlocks,
   significantTokens,
   tokenizeSpice,
-  tokenValue,
   tokensToLogicalCards,
   type SpiceLogicalCard,
 } from "./tokens"
@@ -77,49 +78,9 @@ function parseLogicalCards(
   logicalCards: SpiceLogicalCard[],
   _options: SpiceParseOptions,
 ): SpiceCardInput[] {
-  const cards: SpiceCardInput[] = []
-
-  for (let i = 0; i < logicalCards.length; i += 1) {
-    const card = logicalCards[i]
-    if (card === undefined) continue
-    const head = cardHead(card)
-
-    if (head === ".control") {
-      const lines: string[] = []
-      let originalSource = card.originalSource
-      for (i += 1; i < logicalCards.length; i += 1) {
-        const next = logicalCards[i]
-        if (next === undefined) continue
-        originalSource += `\n${next.originalSource}`
-        if (cardHead(next) === ".endc") break
-        lines.push(next.originalSource)
-      }
-      cards.push(new ControlBlock({ lines, originalSource }))
-      continue
-    }
-
-    if (head === ".subckt") {
-      const subckt = Subckt.fromSpiceTokens(card)
-      let originalSource = card.originalSource
-      for (i += 1; i < logicalCards.length; i += 1) {
-        const next = logicalCards[i]
-        if (next === undefined) continue
-        originalSource += `\n${next.originalSource}`
-        if (cardHead(next) === ".ends") {
-          subckt.endsName = cardArgs(next)[0]
-          break
-        }
-        subckt.cards.push(SpiceCard.parseSpiceTokens(next) as SpiceCardInput)
-      }
-      subckt.originalSource = originalSource
-      cards.push(subckt)
-      continue
-    }
-
-    cards.push(SpiceCard.parseSpiceTokens(card) as SpiceCardInput)
-  }
-
-  return cards
+  return logicalCards.map(
+    (card) => SpiceCard.parseSpiceTokens(card) as SpiceCardInput,
+  )
 }
 
 function tokenizeToLogicalCards(source: string): SpiceLogicalCard[] {
@@ -128,36 +89,7 @@ function tokenizeToLogicalCards(source: string): SpiceLogicalCard[] {
     preserveComments: true,
     normalizeNumbers: true,
   })
-  return mergeContinuationCards(tokensToLogicalCards(result.tokens))
-}
-
-function mergeContinuationCards(cards: SpiceLogicalCard[]): SpiceLogicalCard[] {
-  const merged: SpiceLogicalCard[] = []
-  for (const card of cards) {
-    const first = significantTokens(card.tokens)[0]
-    if (first?.type === "continuation" && merged.length > 0) {
-      const previous = merged.at(-1)!
-      previous.tokens.push(...card.tokens)
-      previous.originalSource = `${previous.originalSource}\n${card.originalSource}`
-      previous.range.end = card.range.end
-      continue
-    }
-    merged.push(card)
-  }
-  return merged
-}
-
-function cardHead(card: SpiceLogicalCard): string | undefined {
-  const [head] = significantTokens(card.tokens)
-  if (head === undefined) return undefined
-  if (head.type === "directive") return `.${head.value}`
-  return tokenValue(head)?.toString()
-}
-
-function cardArgs(card: SpiceLogicalCard): string[] {
-  return significantTokens(card.tokens)
-    .slice(1)
-    .map((token) => tokenValue(token) ?? token.raw)
+  return groupSpiceBlocks(tokensToLogicalCards(result.tokens))
 }
 
 function isTitleCard(card: SpiceLogicalCard): boolean {

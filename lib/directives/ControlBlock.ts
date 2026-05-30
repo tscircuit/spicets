@@ -16,7 +16,7 @@ export class ControlBlock extends DotCommand {
   static fromSpiceTokens(card: SpiceLogicalCard): ControlBlock {
     const tokens = SpiceTokenCard.from(card)
     return new ControlBlock({
-      lines: [],
+      lines: card.childCards?.map((childCard) => childCard.originalSource) ?? [],
       originalSource: tokens.originalSource,
     })
   }

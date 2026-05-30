@@ -59,6 +59,79 @@ export function tokenizeSpice(
     if (token.type === "comment" && !preserveComments) return
     tokens.push(token)
   }
+  const isDigit = (value: string | undefined) =>
+    value !== undefined && value >= "0" && value <= "9"
+  const startsNumber = (index: number) => {
+    const value = source[index]
+    const nextValue = source[index + 1]
+    if (isDigit(value)) return true
+    if (value === "." && isDigit(nextValue)) return true
+    if ((value === "+" || value === "-") && isDigit(nextValue)) return true
+    return (
+      (value === "+" || value === "-") &&
+      nextValue === "." &&
+      isDigit(source[index + 2])
+    )
+  }
+  const readNumberRaw = () => {
+    let raw = ""
+    if (source[offset] === "+" || source[offset] === "-") {
+      raw += source[offset]
+      advance(source[offset]!)
+    }
+    while (isDigit(source[offset])) {
+      raw += source[offset]
+      advance(source[offset]!)
+    }
+    if (source[offset] === ".") {
+      raw += source[offset]
+      advance(source[offset]!)
+      while (isDigit(source[offset])) {
+        raw += source[offset]
+        advance(source[offset]!)
+      }
+    }
+    if (source[offset] === "e" || source[offset] === "E") {
+      raw += source[offset]
+      advance(source[offset]!)
+      if (source[offset] === "+" || source[offset] === "-") {
+        raw += source[offset]
+        advance(source[offset]!)
+      }
+      while (isDigit(source[offset])) {
+        raw += source[offset]
+        advance(source[offset]!)
+      }
+    }
+    while (
+      (source[offset] !== undefined && source[offset]! >= "a" && source[offset]! <= "z") ||
+      (source[offset] !== undefined && source[offset]! >= "A" && source[offset]! <= "Z")
+    ) {
+      raw += source[offset]
+      advance(source[offset]!)
+    }
+    return raw
+  }
+  const pushNumberToken = (raw: string, range: SourceRange) => {
+    const numberMatch = raw.match(numberPattern)
+    if (!numberMatch) return false
+    const unitSuffix = numberMatch[1]
+    const suffix = unitSuffix?.toLowerCase()
+    const numericRaw = unitSuffix === undefined ? raw : raw.slice(0, -unitSuffix.length)
+    const baseValue = Number(numericRaw)
+    const value =
+      normalizeNumbers && !Number.isNaN(baseValue)
+        ? baseValue * (suffix === undefined ? 1 : (suffixScale[suffix] ?? 1))
+        : null
+    pushToken({
+      type: "number",
+      raw,
+      value,
+      unitSuffix,
+      range,
+    })
+    return true
+  }
 
   while (offset < source.length) {
     const start = position()
@@ -147,6 +220,12 @@ export function tokenizeSpice(
       continue
     }
 
+    if (startsNumber(offset)) {
+      const raw = readNumberRaw()
+      atLineStart = false
+      if (pushNumberToken(raw, rangeFrom(start))) continue
+    }
+
     if (operatorChars.has(char)) {
       advance(char)
       atLineStart = false
@@ -188,25 +267,7 @@ export function tokenizeSpice(
       continue
     }
 
-    const numberMatch = raw.match(numberPattern)
-    if (numberMatch) {
-      const unitSuffix = numberMatch[1]
-      const suffix = unitSuffix?.toLowerCase()
-      const numericRaw = unitSuffix === undefined ? raw : raw.slice(0, -unitSuffix.length)
-      const baseValue = Number(numericRaw)
-      const value =
-        normalizeNumbers && !Number.isNaN(baseValue)
-          ? baseValue * (suffix === undefined ? 1 : (suffixScale[suffix] ?? 1))
-          : null
-      pushToken({
-        type: "number",
-        raw,
-        value,
-        unitSuffix,
-        range,
-      })
-      continue
-    }
+    if (pushNumberToken(raw, range)) continue
 
     pushToken({ type: "identifier", raw, value: raw, range })
   }
