@@ -25,6 +25,21 @@ export function tokensToLogicalCards(tokens: SpiceToken[]): SpiceLogicalCard[] {
 
   for (const token of tokens) {
     if (token.type === "newline") {
+      if (pendingNewline !== undefined) {
+        const blankLineLeadingNewline = pendingNewline
+        finish()
+        cards.push({
+          tokens: [],
+          originalSource: "",
+          range: {
+            start: blankLineLeadingNewline.range.end,
+            end: blankLineLeadingNewline.range.end,
+          },
+          leadingNewlineRaw: blankLineLeadingNewline.raw as "\n" | "\r\n" | "\r",
+        })
+        pendingNewline = token
+        continue
+      }
       pendingNewline = current.length === 0 ? undefined : token
       continue
     }
@@ -37,6 +52,7 @@ export function tokensToLogicalCards(tokens: SpiceToken[]): SpiceLogicalCard[] {
         const leadingNewlineRaw = pendingNewline.raw as "\n" | "\r\n" | "\r"
         finish()
         currentLeadingNewlineRaw = leadingNewlineRaw
+        pendingNewline = undefined
         current.push(token)
       }
       continue
