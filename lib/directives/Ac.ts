@@ -1,6 +1,6 @@
 import { AnalysisCommand, type SpiceNodeInit, type SpiceSerializeOptions } from "../ast"
 import type { SpiceLogicalCard } from "../tokens"
-import { cardOriginalSource, directiveArgs } from "../tokens/fromTokens"
+import { SpiceTokenCard } from "../tokens/fromTokens"
 import { SpiceValue, type SpiceValueInput, normalizeValue } from "../values"
 
 export class Ac extends AnalysisCommand {
@@ -26,14 +26,13 @@ export class Ac extends AnalysisCommand {
   }
 
   static fromSpiceTokens(card: SpiceLogicalCard): Ac {
-    const args = directiveArgs(card)
-    const sweep = args[0]?.toLowerCase()
+    const tokens = SpiceTokenCard.from(card)
     return new Ac({
-      sweep: sweep === "oct" || sweep === "lin" ? sweep : "dec",
-      points: Number(args[1] ?? 0),
-      start: args[2] ?? "",
-      stop: args[3] ?? "",
-      originalSource: cardOriginalSource(card),
+      sweep: tokens.sweepArg(0, "dec"),
+      points: Number(tokens.arg(1) ?? 0),
+      start: tokens.arg(2) ?? "",
+      stop: tokens.arg(3) ?? "",
+      originalSource: tokens.originalSource,
     })
   }
 

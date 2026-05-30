@@ -1,6 +1,6 @@
 import { AnalysisCommand, type SpiceNodeInit, type SpiceSerializeOptions } from "../ast"
 import type { SpiceLogicalCard } from "../tokens"
-import { cardOriginalSource, directiveArgs } from "../tokens/fromTokens"
+import { SpiceTokenCard } from "../tokens/fromTokens"
 import { SpiceValue, type SpiceValueInput, normalizeValue } from "../values"
 
 export class Tran extends AnalysisCommand {
@@ -30,14 +30,14 @@ export class Tran extends AnalysisCommand {
   }
 
   static fromSpiceTokens(card: SpiceLogicalCard): Tran {
-    const args = directiveArgs(card)
+    const tokens = SpiceTokenCard.from(card)
     return new Tran({
-      step: args[0],
-      stop: args[1] ?? "",
-      start: args[2],
-      maxStep: args[3],
-      uic: args.some((arg) => arg.toLowerCase() === "uic"),
-      originalSource: cardOriginalSource(card),
+      step: tokens.arg(0),
+      stop: tokens.arg(1) ?? "",
+      start: tokens.arg(2),
+      maxStep: tokens.arg(3),
+      uic: tokens.hasKeyword("uic"),
+      originalSource: tokens.originalSource,
     })
   }
 

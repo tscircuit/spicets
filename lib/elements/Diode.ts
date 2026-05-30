@@ -1,6 +1,6 @@
 import type { SpiceNodeInit, SpiceSerializeOptions } from "../ast"
 import type { SpiceLogicalCard } from "../tokens"
-import { cardOriginalSource, elementArgs, elementName, parseParamTokenStrings } from "../tokens/fromTokens"
+import { SpiceTokenCard } from "../tokens/fromTokens"
 import type { NodeRefInput, ParamsInput } from "../values"
 import { ElementCard } from "./ElementCard"
 
@@ -20,13 +20,13 @@ export class Diode extends ElementCard {
   }
 
   static fromSpiceTokens(card: SpiceLogicalCard): Diode {
-    const args = elementArgs(card)
+    const tokens = SpiceTokenCard.from(card)
     return new Diode({
-      name: elementName(card),
-      nodes: [args[0] ?? "", args[1] ?? ""],
-      model: args[2] ?? "",
-      params: parseParamTokenStrings(args.slice(3)),
-      originalSource: cardOriginalSource(card),
+      name: tokens.head(),
+      nodes: [tokens.arg(0) ?? "", tokens.arg(1) ?? ""],
+      model: tokens.arg(2) ?? "",
+      params: tokens.paramsAfter(3),
+      originalSource: tokens.originalSource,
     })
   }
 

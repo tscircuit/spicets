@@ -1,6 +1,6 @@
 import { DotCommand, type SpiceNodeInit, type SpiceSerializeOptions } from "../ast"
 import type { SpiceLogicalCard } from "../tokens"
-import { cardOriginalSource, directiveArgs, parseParamTokenStrings } from "../tokens/fromTokens"
+import { SpiceTokenCard } from "../tokens/fromTokens"
 import { ParamList, type ParamsInput } from "../values"
 
 export class Model extends DotCommand {
@@ -19,12 +19,12 @@ export class Model extends DotCommand {
   }
 
   static fromSpiceTokens(card: SpiceLogicalCard): Model {
-    const args = directiveArgs(card)
+    const tokens = SpiceTokenCard.from(card)
     return new Model({
-      name: args[0] ?? "",
-      type: args[1] ?? "",
-      params: parseParamTokenStrings(args.slice(2)),
-      originalSource: cardOriginalSource(card),
+      name: tokens.arg(0) ?? "",
+      type: tokens.arg(1) ?? "",
+      params: tokens.paramsAfter(2),
+      originalSource: tokens.originalSource,
     })
   }
 

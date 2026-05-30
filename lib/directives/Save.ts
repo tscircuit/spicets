@@ -1,6 +1,6 @@
 import { DotCommand, type SpiceNodeInit, type SpiceSerializeOptions } from "../ast"
 import type { SpiceLogicalCard } from "../tokens"
-import { cardOriginalSource, directiveArgs } from "../tokens/fromTokens"
+import { SpiceTokenCard } from "../tokens/fromTokens"
 
 export class Save extends DotCommand {
   static spiceTokenKeys = [".save"]
@@ -14,7 +14,8 @@ export class Save extends DotCommand {
   }
 
   static fromSpiceTokens(card: SpiceLogicalCard): Save {
-    return new Save(directiveArgs(card), { originalSource: cardOriginalSource(card) })
+    const tokens = SpiceTokenCard.from(card)
+    return new Save(tokens.args(), { originalSource: tokens.originalSource })
   }
 
   getChildren(): [] {

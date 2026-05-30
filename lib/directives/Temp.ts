@@ -1,6 +1,6 @@
 import { DotCommand, type SpiceNodeInit, type SpiceSerializeOptions } from "../ast"
 import type { SpiceLogicalCard } from "../tokens"
-import { cardOriginalSource, directiveArgs } from "../tokens/fromTokens"
+import { SpiceTokenCard } from "../tokens/fromTokens"
 import { SpiceValue, type SpiceValueInput, normalizeValue } from "../values"
 
 export class Temp extends DotCommand {
@@ -15,7 +15,8 @@ export class Temp extends DotCommand {
   }
 
   static fromSpiceTokens(card: SpiceLogicalCard): Temp {
-    return new Temp(directiveArgs(card), { originalSource: cardOriginalSource(card) })
+    const tokens = SpiceTokenCard.from(card)
+    return new Temp(tokens.args(), { originalSource: tokens.originalSource })
   }
 
   getChildren(): [] {

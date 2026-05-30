@@ -1,6 +1,6 @@
 import type { SpiceNodeInit, SpiceSerializeOptions } from "../ast"
 import type { SpiceLogicalCard } from "../tokens"
-import { cardOriginalSource, elementArgs, elementName, parseParamTokenStrings } from "../tokens/fromTokens"
+import { SpiceTokenCard } from "../tokens/fromTokens"
 import { SpiceValue, type NodeRefInput, type ParamsInput, type SpiceValueInput, normalizeValue } from "../values"
 import { ElementCard } from "./ElementCard"
 
@@ -24,13 +24,13 @@ export class Inductor extends ElementCard {
   }
 
   static fromSpiceTokens(card: SpiceLogicalCard): Inductor {
-    const args = elementArgs(card)
+    const tokens = SpiceTokenCard.from(card)
     return new Inductor({
-      name: elementName(card),
-      nodes: [args[0] ?? "", args[1] ?? ""],
-      inductance: args[2] ?? "",
-      params: parseParamTokenStrings(args.slice(3)),
-      originalSource: cardOriginalSource(card),
+      name: tokens.head(),
+      nodes: [tokens.arg(0) ?? "", tokens.arg(1) ?? ""],
+      inductance: tokens.arg(2) ?? "",
+      params: tokens.paramsAfter(3),
+      originalSource: tokens.originalSource,
     })
   }
 

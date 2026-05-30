@@ -1,6 +1,6 @@
 import type { SpiceNodeInit, SpiceSerializeOptions } from "../ast"
 import type { SpiceLogicalCard } from "../tokens"
-import { cardOriginalSource, elementArgs, elementName } from "../tokens/fromTokens"
+import { SpiceTokenCard } from "../tokens/fromTokens"
 import type { NodeRefInput, ParamsInput } from "../values"
 import { ElementCard } from "./ElementCard"
 
@@ -20,12 +20,12 @@ export class SubcktInstance extends ElementCard {
   }
 
   static fromSpiceTokens(card: SpiceLogicalCard): SubcktInstance {
-    const args = elementArgs(card)
+    const tokens = SpiceTokenCard.from(card)
     return new SubcktInstance({
-      name: elementName(card),
-      nodes: args.slice(0, -1),
-      subckt: args.at(-1) ?? "",
-      originalSource: cardOriginalSource(card),
+      name: tokens.head(),
+      nodes: tokens.argsUntilLast(),
+      subckt: tokens.lastArg() ?? "",
+      originalSource: tokens.originalSource,
     })
   }
 

@@ -1,6 +1,6 @@
 import type { SpiceNodeInit, SpiceSerializeOptions } from "../ast"
 import type { SpiceLogicalCard } from "../tokens"
-import { cardOriginalSource, elementArgs, elementName, parseParamTokenStrings } from "../tokens/fromTokens"
+import { SpiceTokenCard } from "../tokens/fromTokens"
 import type { NodeRefInput, ParamsInput } from "../values"
 import { ElementCard } from "./ElementCard"
 
@@ -23,18 +23,18 @@ export class Bjt extends ElementCard {
   }
 
   static fromSpiceTokens(card: SpiceLogicalCard): Bjt {
-    const args = elementArgs(card)
-    const hasSubstrate = args.length > 4
+    const tokens = SpiceTokenCard.from(card)
+    const hasSubstrate = tokens.args().length > 4
     const nodes: [string, string, string, string?] = hasSubstrate
-      ? [args[0] ?? "", args[1] ?? "", args[2] ?? "", args[3] ?? ""]
-      : [args[0] ?? "", args[1] ?? "", args[2] ?? ""]
+      ? [tokens.arg(0) ?? "", tokens.arg(1) ?? "", tokens.arg(2) ?? "", tokens.arg(3) ?? ""]
+      : [tokens.arg(0) ?? "", tokens.arg(1) ?? "", tokens.arg(2) ?? ""]
     const modelIndex = hasSubstrate ? 4 : 3
     return new Bjt({
-      name: elementName(card),
+      name: tokens.head(),
       nodes,
-      model: args[modelIndex] ?? "",
-      params: parseParamTokenStrings(args.slice(modelIndex + 1)),
-      originalSource: cardOriginalSource(card),
+      model: tokens.arg(modelIndex) ?? "",
+      params: tokens.paramsAfter(modelIndex + 1),
+      originalSource: tokens.originalSource,
     })
   }
 

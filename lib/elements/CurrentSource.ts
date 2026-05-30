@@ -1,6 +1,6 @@
 import type { SpiceSerializeOptions } from "../ast"
 import type { SpiceLogicalCard } from "../tokens"
-import { cardOriginalSource, elementArgs, elementName } from "../tokens/fromTokens"
+import { SpiceTokenCard } from "../tokens/fromTokens"
 import { IndependentSource } from "./IndependentSource"
 
 export class CurrentSource extends IndependentSource {
@@ -8,16 +8,13 @@ export class CurrentSource extends IndependentSource {
   readonly type = "current_source" as const
 
   static fromSpiceTokens(card: SpiceLogicalCard): CurrentSource {
-    const args = elementArgs(card)
-    const sourceArgs = args.slice(2)
-    const dcIndex = sourceArgs.findIndex((arg) => arg.toLowerCase() === "dc")
-    const acIndex = sourceArgs.findIndex((arg) => arg.toLowerCase() === "ac")
+    const tokens = SpiceTokenCard.from(card)
     return new CurrentSource({
-      name: elementName(card),
-      nodes: [args[0] ?? "", args[1] ?? ""],
-      dc: dcIndex === -1 ? sourceArgs[0] : sourceArgs[dcIndex + 1],
-      ac: acIndex === -1 ? undefined : sourceArgs[acIndex + 1],
-      originalSource: cardOriginalSource(card),
+      name: tokens.head(),
+      nodes: [tokens.arg(0) ?? "", tokens.arg(1) ?? ""],
+      dc: tokens.argAfterKeyword("dc") ?? tokens.arg(2),
+      ac: tokens.argAfterKeyword("ac"),
+      originalSource: tokens.originalSource,
     })
   }
 

@@ -1,6 +1,6 @@
 import type { SpiceNodeInit, SpiceSerializeOptions } from "../ast"
 import type { SpiceLogicalCard } from "../tokens"
-import { cardOriginalSource, elementArgs, elementName } from "../tokens/fromTokens"
+import { SpiceTokenCard } from "../tokens/fromTokens"
 import { SpiceValue, type NodeRefInput, type SpiceValueInput, normalizeValue } from "../values"
 import { ElementCard } from "./ElementCard"
 
@@ -20,13 +20,13 @@ export class Vcvs extends ElementCard {
   }
 
   static fromSpiceTokens(card: SpiceLogicalCard): Vcvs {
-    const args = elementArgs(card)
+    const tokens = SpiceTokenCard.from(card)
     return new Vcvs({
-      name: elementName(card),
-      output: [args[0] ?? "", args[1] ?? ""],
-      control: [args[2] ?? "", args[3] ?? ""],
-      gain: args[4] ?? "",
-      originalSource: cardOriginalSource(card),
+      name: tokens.head(),
+      output: [tokens.arg(0) ?? "", tokens.arg(1) ?? ""],
+      control: [tokens.arg(2) ?? "", tokens.arg(3) ?? ""],
+      gain: tokens.arg(4) ?? "",
+      originalSource: tokens.originalSource,
     })
   }
 
