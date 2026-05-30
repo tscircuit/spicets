@@ -1,0 +1,15 @@
+import { expect, test } from "bun:test"
+import { parseSpiceNetlist, tokenizeSpice } from "lib"
+
+test("netlist: inverting op-amp", () => {
+  const netlist = `Inverting opamp v1 2 0 dc e 3 0 0 1 999k r1 3 1 3.29k r2 1 2 1.18k .dc v1 0 3.5 0.05 .print dc v(3,0) .end`
+
+  const result = tokenizeSpice(netlist, { preserveWhitespace: true })
+
+  expect(result.errors).toEqual([])
+  expect(result.source.text).toBe(netlist)
+
+  const parsed = parseSpiceNetlist(netlist)
+
+  expect(parsed.getString()).toBe(netlist)
+})
