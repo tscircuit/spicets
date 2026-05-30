@@ -1,6 +1,6 @@
 import { DotCommand, type SpiceNodeInit, type SpiceSerializeOptions } from "../ast"
 import type { SpiceLogicalCard } from "../tokens"
-import { cardOriginalSource } from "../tokens/fromTokens"
+import { SpiceTokenCard } from "../tokens/fromTokens"
 
 export class ControlBlock extends DotCommand {
   static spiceTokenKeys = [".control"]
@@ -14,9 +14,10 @@ export class ControlBlock extends DotCommand {
   }
 
   static fromSpiceTokens(card: SpiceLogicalCard): ControlBlock {
+    const tokens = SpiceTokenCard.from(card)
     return new ControlBlock({
       lines: [],
-      originalSource: cardOriginalSource(card),
+      originalSource: tokens.originalSource,
     })
   }
 

@@ -1,6 +1,6 @@
 import { AnalysisCommand, type SpiceSerializeOptions } from "../ast"
 import type { SpiceLogicalCard } from "../tokens"
-import { cardOriginalSource } from "../tokens/fromTokens"
+import { SpiceTokenCard } from "../tokens/fromTokens"
 
 export class Op extends AnalysisCommand {
   static spiceTokenKeys = [".op"]
@@ -8,7 +8,7 @@ export class Op extends AnalysisCommand {
   command = ".op"
 
   static fromSpiceTokens(card: SpiceLogicalCard): Op {
-    return new Op({ originalSource: cardOriginalSource(card) })
+    return new Op({ originalSource: SpiceTokenCard.from(card).originalSource })
   }
 
   getChildren(): [] {

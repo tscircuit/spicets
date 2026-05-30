@@ -1,6 +1,6 @@
 import { SpiceCard, SpiceTrivia } from "../ast"
 import type { SpiceLogicalCard } from "../tokens"
-import { cardOriginalSource } from "../tokens/fromTokens"
+import { SpiceTokenCard } from "../tokens/fromTokens"
 
 export class BlankLine extends SpiceTrivia {
   static spiceTokenKeys = ["blank"]
@@ -14,7 +14,7 @@ export class BlankLine extends SpiceTrivia {
   }
 
   static fromSpiceTokens(card: SpiceLogicalCard): BlankLine {
-    return new BlankLine({ originalSource: cardOriginalSource(card) })
+    return new BlankLine({ originalSource: SpiceTokenCard.from(card).originalSource })
   }
 
   getChildren(): [] {

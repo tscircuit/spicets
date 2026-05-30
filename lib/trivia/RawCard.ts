@@ -1,6 +1,6 @@
 import { SpiceCard } from "../ast"
 import type { SpiceLogicalCard } from "../tokens"
-import { cardOriginalSource } from "../tokens/fromTokens"
+import { SpiceTokenCard } from "../tokens/fromTokens"
 
 export class RawCard extends SpiceCard {
   static spiceTokenKeys = ["raw", "error", "number", "operator", "punctuation"]
@@ -14,7 +14,7 @@ export class RawCard extends SpiceCard {
   }
 
   static fromSpiceTokens(card: SpiceLogicalCard): RawCard {
-    return new RawCard(cardOriginalSource(card))
+    return new RawCard(SpiceTokenCard.from(card).originalSource)
   }
 
   getChildren(): [] {

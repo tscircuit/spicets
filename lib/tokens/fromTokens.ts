@@ -1,53 +1,21 @@
 import type { SpiceLogicalCard, SpiceToken } from "./types"
 import { significantTokens, tokenValue } from "./logicalCards"
 
-export function cardOriginalSource(card: SpiceLogicalCard): string {
-  return card.originalSource
+type KeywordMatch = {
+  argIndex: number
+  tokenIndex: number
+  tokenCount: number
 }
 
-export function cardTokens(card: SpiceLogicalCard): SpiceToken[] {
-  return significantTokens(card.tokens)
+function tokenText(token: SpiceToken | undefined): string | undefined {
+  return tokenValue(token)
 }
 
-export function tokenStrings(card: SpiceLogicalCard): string[] {
-  return cardTokens(card).map((token) => tokenValue(token) ?? token.raw)
-}
-
-export function tokenRawStrings(card: SpiceLogicalCard): string[] {
-  return cardTokens(card).map((token) => token.raw)
-}
-
-export function directiveArgs(card: SpiceLogicalCard): string[] {
-  return tokenStrings(card).slice(1)
-}
-
-export function elementName(card: SpiceLogicalCard): string {
-  return tokenValue(cardTokens(card)[0]) ?? ""
-}
-
-export function elementArgs(card: SpiceLogicalCard): string[] {
-  return tokenStrings(card).slice(1)
-}
-
-export function parseParamTokenStrings(tokens: string[]): Array<[string, string]> {
-  const entries: Array<[string, string]> = []
-  for (let i = 0; i < tokens.length; i += 1) {
-    const token = tokens[i]
-    if (token === undefined || token === "(" || token === ")") continue
-    const equalsIndex = token.indexOf("=")
-    if (equalsIndex > 0) {
-      entries.push([
-        token.slice(0, equalsIndex).replace(/^\(/, ""),
-        token.slice(equalsIndex + 1).replace(/\)$/, ""),
-      ])
-      continue
-    }
-    if (tokens[i + 1] === "=" && tokens[i + 2] !== undefined) {
-      entries.push([token.replace(/^\(/, ""), tokens[i + 2]!.replace(/\)$/, "")])
-      i += 2
-    }
-  }
-  return entries
+function isIgnorableParamToken(token: SpiceToken): boolean {
+  return (
+    token.type === "punctuation" &&
+    (token.value === "(" || token.value === ")" || token.value === ",")
+  )
 }
 
 export class SpiceTokenCard {
@@ -55,8 +23,8 @@ export class SpiceTokenCard {
   readonly originalSource: string
 
   private constructor(private readonly card: SpiceLogicalCard) {
-    this.tokens = cardTokens(card)
-    this.originalSource = cardOriginalSource(card)
+    this.tokens = significantTokens(card.tokens)
+    this.originalSource = card.originalSource
   }
 
   static from(card: SpiceLogicalCard): SpiceTokenCard {
@@ -64,7 +32,7 @@ export class SpiceTokenCard {
   }
 
   head(): string {
-    return tokenValue(this.tokens[0]) ?? ""
+    return tokenText(this.tokens[0]) ?? ""
   }
 
   headRaw(): string {
@@ -76,11 +44,13 @@ export class SpiceTokenCard {
   }
 
   arg(index: number): string | undefined {
-    return tokenValue(this.tokens[index + 1])
+    return tokenText(this.tokens[index + 1])
   }
 
   args(): string[] {
-    return this.tokens.slice(1).map((token) => tokenValue(token) ?? token.raw)
+    return this.tokens
+      .slice(1)
+      .map((token) => tokenText(token) ?? token.raw)
   }
 
   argsAfter(index: number): string[] {
@@ -96,18 +66,16 @@ export class SpiceTokenCard {
   }
 
   keywordIndex(keyword: string): number {
-    return this.args().findIndex(
-      (arg) => arg.toLowerCase() === keyword.toLowerCase(),
-    )
+    return this.findKeyword(keyword)?.argIndex ?? -1
   }
 
   argAfterKeyword(keyword: string): string | undefined {
-    const index = this.keywordIndex(keyword)
-    return index === -1 ? undefined : this.arg(index + 1)
+    const match = this.findKeyword(keyword)
+    return match === undefined ? undefined : tokenText(this.tokens[match.tokenIndex + match.tokenCount])
   }
 
   hasKeyword(keyword: string): boolean {
-    return this.keywordIndex(keyword) !== -1
+    return this.findKeyword(keyword) !== undefined
   }
 
   sweepArg(index: number, fallback: "dec" | "oct" | "lin"): "dec" | "oct" | "lin" {
@@ -116,23 +84,87 @@ export class SpiceTokenCard {
   }
 
   paramsAfter(index: number): Array<[string, string]> {
-    return parseParamTokenStrings(this.argsAfter(index))
+    return this.readParamsFrom(1 + index)
   }
 
   paramsAfterKeyword(keyword: string): Array<[string, string]> | undefined {
-    const index = this.keywordIndex(keyword)
-    return index === -1 ? undefined : parseParamTokenStrings(this.argsAfter(index + 1))
+    const match = this.findKeyword(keyword)
+    if (match === undefined) return undefined
+    return this.readParamsFrom(match.tokenIndex + match.tokenCount)
   }
 
   argsBeforeKeyword(keyword: string, startIndex = 0): string[] {
-    const args = this.args()
-    const index = args.findIndex(
-      (arg, i) => i >= startIndex && arg.toLowerCase() === keyword.toLowerCase(),
-    )
-    return index === -1 ? args.slice(startIndex) : args.slice(startIndex, index)
+    const match = this.findKeyword(keyword, startIndex)
+    const endTokenIndex = match?.tokenIndex ?? this.tokens.length
+    return this.tokens
+      .slice(1 + startIndex, endTokenIndex)
+      .map((token) => tokenText(token) ?? token.raw)
   }
 
   restJoined(startIndex: number): string {
     return this.argsAfter(startIndex).join(" ")
+  }
+
+  private findKeyword(keyword: string, startArgIndex = 0): KeywordMatch | undefined {
+    const keywordHasColon = keyword.endsWith(":")
+    const keywordName = keywordHasColon ? keyword.slice(0, -1) : keyword
+
+    for (let tokenIndex = 1 + startArgIndex; tokenIndex < this.tokens.length; tokenIndex += 1) {
+      const token = this.tokens[tokenIndex]
+      const value = tokenText(token)
+      if (value === undefined) continue
+      if (value.toLowerCase() !== keywordName.toLowerCase()) continue
+
+      if (keywordHasColon) {
+        const next = this.tokens[tokenIndex + 1]
+        if (next?.type !== "punctuation" || next.value !== ":") continue
+        return {
+          argIndex: tokenIndex - 1,
+          tokenIndex,
+          tokenCount: 2,
+        }
+      }
+
+      return {
+        argIndex: tokenIndex - 1,
+        tokenIndex,
+        tokenCount: 1,
+      }
+    }
+
+    return undefined
+  }
+
+  private readParamsFrom(tokenIndex: number): Array<[string, string]> {
+    const entries: Array<[string, string]> = []
+    let index = tokenIndex
+
+    while (index < this.tokens.length) {
+      const nameToken = this.tokens[index]
+      if (nameToken === undefined) break
+      if (isIgnorableParamToken(nameToken)) {
+        index += 1
+        continue
+      }
+
+      const equalsToken = this.tokens[index + 1]
+      const valueToken = this.tokens[index + 2]
+      if (
+        equalsToken?.type === "operator" &&
+        equalsToken.value === "=" &&
+        valueToken !== undefined &&
+        !isIgnorableParamToken(valueToken)
+      ) {
+        const name = tokenText(nameToken)
+        const value = tokenText(valueToken)
+        if (name !== undefined && value !== undefined) entries.push([name, value])
+        index += 3
+        continue
+      }
+
+      index += 1
+    }
+
+    return entries
   }
 }

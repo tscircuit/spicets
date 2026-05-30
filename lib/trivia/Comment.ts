@@ -1,6 +1,6 @@
 import { SpiceCard, SpiceTrivia, type SpiceSerializeOptions } from "../ast"
 import type { SpiceLogicalCard } from "../tokens"
-import { cardOriginalSource, cardTokens } from "../tokens/fromTokens"
+import { SpiceTokenCard } from "../tokens/fromTokens"
 
 export class Comment extends SpiceTrivia {
   static spiceTokenKeys = ["comment"]
@@ -18,15 +18,16 @@ export class Comment extends SpiceTrivia {
   }
 
   static fromSpiceTokens(card: SpiceLogicalCard): Comment {
-    const [token] = cardTokens(card)
+    const tokens = SpiceTokenCard.from(card)
+    const [token] = tokens.tokens
     if (token?.type === "comment") {
       return new Comment(token.value, {
         marker: token.marker,
-        originalSource: cardOriginalSource(card),
+        originalSource: tokens.originalSource,
       })
     }
-    return new Comment(cardOriginalSource(card), {
-      originalSource: cardOriginalSource(card),
+    return new Comment(tokens.originalSource, {
+      originalSource: tokens.originalSource,
     })
   }
 
