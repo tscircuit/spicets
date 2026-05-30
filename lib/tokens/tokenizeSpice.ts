@@ -66,11 +66,23 @@ export function tokenizeSpice(
     const nextValue = source[index + 1]
     if (isDigit(value)) return true
     if (value === "." && isDigit(nextValue)) return true
+    if ((value === "+" || value === "-") && !isSignedNumberStart()) return false
     if ((value === "+" || value === "-") && isDigit(nextValue)) return true
     return (
       (value === "+" || value === "-") &&
       nextValue === "." &&
       isDigit(source[index + 2])
+    )
+  }
+  const isSignedNumberStart = () => {
+    const previous = tokens.at(-1)
+    return (
+      previous === undefined ||
+      previous.type === "whitespace" ||
+      previous.type === "newline" ||
+      previous.type === "continuation" ||
+      previous.type === "operator" ||
+      previous.type === "punctuation"
     )
   }
   const readNumberRaw = () => {
