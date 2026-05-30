@@ -5,6 +5,7 @@ import { SpiceValue, type NodeRefInput, type ParamsInput, type SpiceValueInput, 
 import { ElementCard } from "./ElementCard"
 
 export class Inductor extends ElementCard {
+  static spiceTokenKeys = ["L"]
   readonly type = "inductor" as const
   inductance: SpiceValue
   initialCondition?: SpiceValue
@@ -47,3 +48,4 @@ export class Inductor extends ElementCard {
     )
   }
 }
+ElementCard.register(Inductor)

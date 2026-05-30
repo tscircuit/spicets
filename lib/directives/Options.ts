@@ -4,6 +4,7 @@ import { cardOriginalSource, directiveArgs, parseParamTokenStrings } from "../to
 import { ParamList, type ParamsInput } from "../values"
 
 export class Options extends DotCommand {
+  static spiceTokenKeys = [".options"]
   readonly type = "options" as const
   command = ".options"
   values: ParamList
@@ -28,3 +29,4 @@ export class Options extends DotCommand {
     return `${this.command} ${this.values.getString(options)}`.trimEnd()
   }
 }
+DotCommand.register(Options)

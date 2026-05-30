@@ -5,6 +5,7 @@ import { SpiceValue, type NodeRefInput, type SpiceValueInput, normalizeValue } f
 import { ElementCard } from "./ElementCard"
 
 export class Ccvs extends ElementCard {
+  static spiceTokenKeys = ["H"]
   readonly type = "ccvs" as const
   source: string
   transresistance: SpiceValue
@@ -43,3 +44,4 @@ export class Ccvs extends ElementCard {
     )
   }
 }
+ElementCard.register(Ccvs)

@@ -157,8 +157,9 @@ const clock = new VoltageSource({
 
 - `parseToSpiceTokens()` / `tokenizeSpice()` are the low-level tokenizer layer,
   equivalent in spirit to `kicadts`'s S-expression parser.
-- `SpiceTokenClassRegistry` maps tokenized cards to classes through each
-  class's `fromSpiceTokens()` static method.
+- `SpiceCard.register()` maps tokenized cards to classes through each class's
+  `fromSpiceTokens()` static method, mirroring the `SxClass.register(...)`
+  pattern in `kicadts`.
 - `SpiceNetlist.cards` is the ordered source of truth.
 - Typed getters expose `elements`, `directives`, `subckts`, `models`, and
   `analyses`.

@@ -4,6 +4,7 @@ import { cardOriginalSource, directiveArgs } from "../tokens/fromTokens"
 import { SpiceValue, type SpiceValueInput, normalizeValue } from "../values"
 
 export class Temp extends DotCommand {
+  static spiceTokenKeys = [".temp"]
   readonly type = "temp" as const
   command = ".temp"
   values: SpiceValue[]
@@ -26,3 +27,4 @@ export class Temp extends DotCommand {
     return [this.command, ...this.values.map((value) => value.getString())].join(" ")
   }
 }
+DotCommand.register(Temp)

@@ -3,6 +3,7 @@ import type { SpiceLogicalCard } from "../tokens"
 import { cardOriginalSource } from "../tokens/fromTokens"
 
 export class ControlBlock extends DotCommand {
+  static spiceTokenKeys = [".control"]
   readonly type = "control" as const
   command = ".control"
   lines: string[]
@@ -28,3 +29,4 @@ export class ControlBlock extends DotCommand {
     return [this.command, ...this.lines, ".endc"].join("\n")
   }
 }
+DotCommand.register(ControlBlock)

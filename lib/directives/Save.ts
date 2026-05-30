@@ -3,6 +3,7 @@ import type { SpiceLogicalCard } from "../tokens"
 import { cardOriginalSource, directiveArgs } from "../tokens/fromTokens"
 
 export class Save extends DotCommand {
+  static spiceTokenKeys = [".save"]
   readonly type = "save" as const
   command = ".save"
   expressions: string[]
@@ -25,3 +26,4 @@ export class Save extends DotCommand {
     return [this.command, ...this.expressions].join(" ")
   }
 }
+DotCommand.register(Save)

@@ -5,6 +5,7 @@ import { SpiceValue, type NodeRefInput, type SpiceValueInput, normalizeValue } f
 import { ElementCard } from "./ElementCard"
 
 export class Cccs extends ElementCard {
+  static spiceTokenKeys = ["F"]
   readonly type = "cccs" as const
   source: string
   gain: SpiceValue
@@ -43,3 +44,4 @@ export class Cccs extends ElementCard {
     )
   }
 }
+ElementCard.register(Cccs)

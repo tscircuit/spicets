@@ -5,6 +5,7 @@ import { SpiceValue, type NodeRefInput, type SpiceValueInput, normalizeValue } f
 import { ElementCard } from "./ElementCard"
 
 export class Vcvs extends ElementCard {
+  static spiceTokenKeys = ["E"]
   readonly type = "vcvs" as const
   gain: SpiceValue
 
@@ -36,3 +37,4 @@ export class Vcvs extends ElementCard {
     )
   }
 }
+ElementCard.register(Vcvs)

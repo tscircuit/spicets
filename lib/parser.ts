@@ -1,8 +1,7 @@
-import type { SpiceParseOptions } from "./ast"
+import { SpiceCard, type SpiceParseOptions } from "./ast"
 import { End, Subckt, ControlBlock } from "./directives"
 import { SpiceLibrary, SpiceNetlist, type SpiceCardInput } from "./roots"
 import {
-  SpiceTokenClassRegistry,
   significantTokens,
   tokenizeSpice,
   tokenValue,
@@ -62,7 +61,7 @@ export function parseSpiceCard(
 ): SpiceCardInput {
   const [card] = tokenizeToLogicalCards(source)
   if (card === undefined) {
-    return SpiceTokenClassRegistry.parse({
+    return SpiceCard.parseSpiceTokens({
       tokens: [],
       originalSource: source,
       range: {
@@ -71,7 +70,7 @@ export function parseSpiceCard(
       },
     }) as SpiceCardInput
   }
-  return SpiceTokenClassRegistry.parse(card) as SpiceCardInput
+  return SpiceCard.parseSpiceTokens(card) as SpiceCardInput
 }
 
 function parseLogicalCards(
@@ -110,14 +109,14 @@ function parseLogicalCards(
           subckt.endsName = cardArgs(next)[0]
           break
         }
-        subckt.cards.push(SpiceTokenClassRegistry.parse(next) as SpiceCardInput)
+        subckt.cards.push(SpiceCard.parseSpiceTokens(next) as SpiceCardInput)
       }
       subckt.originalSource = originalSource
       cards.push(subckt)
       continue
     }
 
-    cards.push(SpiceTokenClassRegistry.parse(card) as SpiceCardInput)
+    cards.push(SpiceCard.parseSpiceTokens(card) as SpiceCardInput)
   }
 
   return cards

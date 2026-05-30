@@ -3,6 +3,7 @@ import type { SpiceLogicalCard } from "../tokens"
 import { cardOriginalSource, directiveArgs } from "../tokens/fromTokens"
 
 export class Include extends DotCommand {
+  static spiceTokenKeys = [".include"]
   readonly type = "include" as const
   command = ".include"
   path: string
@@ -27,3 +28,4 @@ export class Include extends DotCommand {
     return `${this.command} ${this.path}`
   }
 }
+DotCommand.register(Include)

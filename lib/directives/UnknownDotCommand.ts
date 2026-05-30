@@ -3,6 +3,7 @@ import type { SpiceLogicalCard } from "../tokens"
 import { cardOriginalSource, directiveArgs, cardTokens } from "../tokens/fromTokens"
 
 export class UnknownDotCommand extends DotCommand {
+  static spiceTokenKeys = ["__default__"]
   readonly type = "unknown_dot_command" as const
   command: string
   args: string[]
@@ -31,3 +32,4 @@ export class UnknownDotCommand extends DotCommand {
     return [this.command, ...this.args].join(" ")
   }
 }
+DotCommand.register(UnknownDotCommand)

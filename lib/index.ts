@@ -80,7 +80,6 @@ export {
 } from "./parser"
 export {
   parseToSpiceTokens,
-  SpiceTokenClassRegistry,
   significantTokens,
   tokenizeSpice,
   tokenValue,

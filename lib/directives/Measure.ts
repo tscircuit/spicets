@@ -3,6 +3,7 @@ import type { SpiceLogicalCard } from "../tokens"
 import { cardOriginalSource, directiveArgs } from "../tokens/fromTokens"
 
 export class Measure extends DotCommand {
+  static spiceTokenKeys = [".measure"]
   readonly type = "measure" as const
   command = ".measure"
   analysis?: string
@@ -41,3 +42,4 @@ export class Measure extends DotCommand {
       .join(" ")
   }
 }
+DotCommand.register(Measure)

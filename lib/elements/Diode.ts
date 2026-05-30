@@ -5,6 +5,7 @@ import type { NodeRefInput, ParamsInput } from "../values"
 import { ElementCard } from "./ElementCard"
 
 export class Diode extends ElementCard {
+  static spiceTokenKeys = ["D"]
   readonly type = "diode" as const
   model: string
 
@@ -36,3 +37,4 @@ export class Diode extends ElementCard {
     )
   }
 }
+ElementCard.register(Diode)

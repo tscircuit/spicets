@@ -4,6 +4,7 @@ import { cardOriginalSource, directiveArgs } from "../tokens/fromTokens"
 import { SpiceValue, type SpiceValueInput, normalizeValue } from "../values"
 
 export class Tran extends AnalysisCommand {
+  static spiceTokenKeys = [".tran"]
   readonly type = "tran" as const
   command = ".tran"
   step?: SpiceValue
@@ -58,3 +59,4 @@ export class Tran extends AnalysisCommand {
       .join(" ")
   }
 }
+AnalysisCommand.register(Tran)

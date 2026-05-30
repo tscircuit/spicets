@@ -1,8 +1,9 @@
-import { SpiceTrivia } from "../ast"
+import { SpiceCard, SpiceTrivia } from "../ast"
 import type { SpiceLogicalCard } from "../tokens"
 import { cardOriginalSource } from "../tokens/fromTokens"
 
 export class BlankLine extends SpiceTrivia {
+  static spiceTokenKeys = ["blank"]
   readonly type = "blank" as const
   readonly cardKind = "blank" as const
   originalSource?: string
@@ -24,3 +25,4 @@ export class BlankLine extends SpiceTrivia {
     return this.originalSource ?? ""
   }
 }
+SpiceCard.register(BlankLine)

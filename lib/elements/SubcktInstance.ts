@@ -5,6 +5,7 @@ import type { NodeRefInput, ParamsInput } from "../values"
 import { ElementCard } from "./ElementCard"
 
 export class SubcktInstance extends ElementCard {
+  static spiceTokenKeys = ["X"]
   readonly type = "subckt_instance" as const
   subckt: string
 
@@ -35,3 +36,4 @@ export class SubcktInstance extends ElementCard {
     )
   }
 }
+ElementCard.register(SubcktInstance)

@@ -18,6 +18,7 @@ export type DcSweepInput = {
 }
 
 export class Dc extends AnalysisCommand {
+  static spiceTokenKeys = [".dc"]
   readonly type = "dc" as const
   command = ".dc"
   sweeps: DcSweep[]
@@ -61,3 +62,4 @@ export class Dc extends AnalysisCommand {
     ].join(" ")
   }
 }
+AnalysisCommand.register(Dc)

@@ -3,6 +3,7 @@ import type { SpiceLogicalCard } from "../tokens"
 import { cardOriginalSource } from "../tokens/fromTokens"
 
 export class Op extends AnalysisCommand {
+  static spiceTokenKeys = [".op"]
   readonly type = "op" as const
   command = ".op"
 
@@ -19,3 +20,4 @@ export class Op extends AnalysisCommand {
     return this.command
   }
 }
+AnalysisCommand.register(Op)

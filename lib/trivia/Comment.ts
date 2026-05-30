@@ -1,8 +1,9 @@
-import { SpiceTrivia, type SpiceSerializeOptions } from "../ast"
+import { SpiceCard, SpiceTrivia, type SpiceSerializeOptions } from "../ast"
 import type { SpiceLogicalCard } from "../tokens"
 import { cardOriginalSource, cardTokens } from "../tokens/fromTokens"
 
 export class Comment extends SpiceTrivia {
+  static spiceTokenKeys = ["comment"]
   readonly type = "comment" as const
   readonly cardKind = "comment" as const
   text: string
@@ -40,3 +41,4 @@ export class Comment extends SpiceTrivia {
     return `${this.marker} ${this.text}`.trimEnd()
   }
 }
+SpiceCard.register(Comment)

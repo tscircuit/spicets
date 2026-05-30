@@ -5,6 +5,7 @@ import { SpiceValue, type NodeRefInput, type SpiceValueInput, normalizeValue } f
 import { ElementCard } from "./ElementCard"
 
 export class Vccs extends ElementCard {
+  static spiceTokenKeys = ["G"]
   readonly type = "vccs" as const
   transconductance: SpiceValue
 
@@ -40,3 +41,4 @@ export class Vccs extends ElementCard {
     )
   }
 }
+ElementCard.register(Vccs)

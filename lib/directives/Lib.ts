@@ -3,6 +3,7 @@ import type { SpiceLogicalCard } from "../tokens"
 import { cardOriginalSource, directiveArgs } from "../tokens/fromTokens"
 
 export class Lib extends DotCommand {
+  static spiceTokenKeys = [".lib"]
   readonly type = "lib" as const
   command = ".lib"
   path?: string
@@ -32,3 +33,4 @@ export class Lib extends DotCommand {
     return [this.command, this.path, this.section].filter(Boolean).join(" ")
   }
 }
+DotCommand.register(Lib)

@@ -5,6 +5,7 @@ import { SpiceValue, type NodeRefInput, type ParamsInput, type SpiceValueInput, 
 import { ElementCard } from "./ElementCard"
 
 export class Capacitor extends ElementCard {
+  static spiceTokenKeys = ["C"]
   readonly type = "capacitor" as const
   capacitance: SpiceValue
   initialCondition?: SpiceValue
@@ -47,3 +48,4 @@ export class Capacitor extends ElementCard {
     )
   }
 }
+ElementCard.register(Capacitor)

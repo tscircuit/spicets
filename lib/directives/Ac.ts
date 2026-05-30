@@ -4,6 +4,7 @@ import { cardOriginalSource, directiveArgs } from "../tokens/fromTokens"
 import { SpiceValue, type SpiceValueInput, normalizeValue } from "../values"
 
 export class Ac extends AnalysisCommand {
+  static spiceTokenKeys = [".ac"]
   readonly type = "ac" as const
   command = ".ac"
   sweep: "dec" | "oct" | "lin"
@@ -45,3 +46,4 @@ export class Ac extends AnalysisCommand {
     return `${this.command} ${this.sweep} ${this.points} ${this.start.getString()} ${this.stop.getString()}`
   }
 }
+AnalysisCommand.register(Ac)

@@ -1,6 +1,6 @@
 export { AnalysisCommand } from "./AnalysisCommand"
 export { DotCommand } from "./DotCommand"
-export { SpiceCard } from "./SpiceCard"
+export { SpiceCard, type SpiceCardConstructor } from "./SpiceCard"
 export { SpiceNode } from "./SpiceNode"
 export { SpiceTrivia } from "./SpiceTrivia"
 export type {

@@ -5,6 +5,7 @@ import { SpiceValue, type NodeRefInput, type ParamsInput, type SpiceValueInput, 
 import { ElementCard } from "./ElementCard"
 
 export class Resistor extends ElementCard {
+  static spiceTokenKeys = ["R"]
   readonly type = "resistor" as const
   resistance: SpiceValue
 
@@ -39,3 +40,4 @@ export class Resistor extends ElementCard {
     )
   }
 }
+ElementCard.register(Resistor)

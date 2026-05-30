@@ -4,6 +4,7 @@ import { cardOriginalSource, elementArgs, elementName } from "../tokens/fromToke
 import { IndependentSource } from "./IndependentSource"
 
 export class CurrentSource extends IndependentSource {
+  static spiceTokenKeys = ["I"]
   readonly type = "current_source" as const
 
   static fromSpiceTokens(card: SpiceLogicalCard): CurrentSource {
@@ -24,3 +25,4 @@ export class CurrentSource extends IndependentSource {
     return this.formatParts(this.sourceParts(), options)
   }
 }
+IndependentSource.register(CurrentSource)

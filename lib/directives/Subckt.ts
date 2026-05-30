@@ -10,6 +10,7 @@ import {
 } from "../values"
 
 export class Subckt extends DotCommand {
+  static spiceTokenKeys = [".subckt"]
   readonly type = "subckt" as const
   command = ".subckt"
   name: string
@@ -74,3 +75,4 @@ export class Subckt extends DotCommand {
     ].join("\n")
   }
 }
+DotCommand.register(Subckt)

@@ -4,6 +4,7 @@ import { cardOriginalSource, directiveArgs, parseParamTokenStrings } from "../to
 import { ParamList, type ParamsInput } from "../values"
 
 export class Model extends DotCommand {
+  static spiceTokenKeys = [".model"]
   readonly type = "model" as const
   command = ".model"
   name: string
@@ -39,3 +40,4 @@ export class Model extends DotCommand {
       .join(" ")
   }
 }
+DotCommand.register(Model)

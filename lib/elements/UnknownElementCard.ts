@@ -5,6 +5,7 @@ import type { NodeRefInput } from "../values"
 import { ElementCard } from "./ElementCard"
 
 export class UnknownElementCard extends ElementCard {
+  static spiceTokenKeys = ["__unknown_element__"]
   readonly type = "unknown_element" as const
   designator: string
   tokens: string[]
@@ -34,3 +35,4 @@ export class UnknownElementCard extends ElementCard {
     return this.formatParts([this.name, ...this.tokens], options)
   }
 }
+ElementCard.register(UnknownElementCard)

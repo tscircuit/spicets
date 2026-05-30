@@ -5,6 +5,7 @@ import type { NodeRefInput, ParamsInput } from "../values"
 import { ElementCard } from "./ElementCard"
 
 export class Mosfet extends ElementCard {
+  static spiceTokenKeys = ["M"]
   readonly type = "mosfet" as const
   model: string
 
@@ -36,3 +37,4 @@ export class Mosfet extends ElementCard {
     )
   }
 }
+ElementCard.register(Mosfet)
