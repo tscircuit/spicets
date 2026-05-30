@@ -1,4 +1,6 @@
 import type { SpiceNodeInit, SpiceSerializeOptions } from "../ast"
+import type { SpiceLogicalCard } from "../tokens"
+import { cardOriginalSource, elementArgs, elementName, parseParamTokenStrings } from "../tokens/fromTokens"
 import type { NodeRefInput, ParamsInput } from "../values"
 import { ElementCard } from "./ElementCard"
 
@@ -14,6 +16,17 @@ export class Mosfet extends ElementCard {
   }) {
     super(init)
     this.model = init.model
+  }
+
+  static fromSpiceTokens(card: SpiceLogicalCard): Mosfet {
+    const args = elementArgs(card)
+    return new Mosfet({
+      name: elementName(card),
+      nodes: [args[0] ?? "", args[1] ?? "", args[2] ?? "", args[3] ?? ""],
+      model: args[4] ?? "",
+      params: parseParamTokenStrings(args.slice(5)),
+      originalSource: cardOriginalSource(card),
+    })
   }
 
   toSource(options?: SpiceSerializeOptions): string {

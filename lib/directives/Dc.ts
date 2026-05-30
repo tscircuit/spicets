@@ -1,4 +1,6 @@
 import { AnalysisCommand, type SpiceNodeInit, type SpiceSerializeOptions } from "../ast"
+import type { SpiceLogicalCard } from "../tokens"
+import { cardOriginalSource, directiveArgs } from "../tokens/fromTokens"
 import { SpiceValue, type SpiceValueInput, normalizeValue } from "../values"
 
 export interface DcSweep {
@@ -29,6 +31,17 @@ export class Dc extends AnalysisCommand {
       stop: normalizeValue(sweep.stop),
       step: normalizeValue(sweep.step),
     }))
+  }
+
+  static fromSpiceTokens(card: SpiceLogicalCard): Dc {
+    const args = directiveArgs(card)
+    return new Dc({
+      source: args[0] ?? "",
+      start: args[1] ?? "",
+      stop: args[2] ?? "",
+      step: args[3] ?? "",
+      originalSource: cardOriginalSource(card),
+    })
   }
 
   getChildren(): [] {

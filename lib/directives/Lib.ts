@@ -1,4 +1,6 @@
 import { DotCommand, type SpiceNodeInit, type SpiceSerializeOptions } from "../ast"
+import type { SpiceLogicalCard } from "../tokens"
+import { cardOriginalSource, directiveArgs } from "../tokens/fromTokens"
 
 export class Lib extends DotCommand {
   readonly type = "lib" as const
@@ -10,6 +12,15 @@ export class Lib extends DotCommand {
     super(init)
     this.path = init.path
     this.section = init.section
+  }
+
+  static fromSpiceTokens(card: SpiceLogicalCard): Lib {
+    const args = directiveArgs(card)
+    return new Lib({
+      path: args[0],
+      section: args[1],
+      originalSource: cardOriginalSource(card),
+    })
   }
 
   getChildren(): [] {

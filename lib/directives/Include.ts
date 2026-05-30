@@ -1,4 +1,6 @@
 import { DotCommand, type SpiceNodeInit, type SpiceSerializeOptions } from "../ast"
+import type { SpiceLogicalCard } from "../tokens"
+import { cardOriginalSource, directiveArgs } from "../tokens/fromTokens"
 
 export class Include extends DotCommand {
   readonly type = "include" as const
@@ -8,6 +10,12 @@ export class Include extends DotCommand {
   constructor(path: string | { path: string }, init: SpiceNodeInit = {}) {
     super(init)
     this.path = typeof path === "string" ? path : path.path
+  }
+
+  static fromSpiceTokens(card: SpiceLogicalCard): Include {
+    return new Include(directiveArgs(card).join(" "), {
+      originalSource: cardOriginalSource(card),
+    })
   }
 
   getChildren(): [] {

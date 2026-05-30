@@ -1,8 +1,14 @@
 import { DotCommand, type SpiceSerializeOptions } from "../ast"
+import type { SpiceLogicalCard } from "../tokens"
+import { cardOriginalSource } from "../tokens/fromTokens"
 
 export class End extends DotCommand {
   readonly type = "end" as const
   command = ".end"
+
+  static fromSpiceTokens(card: SpiceLogicalCard): End {
+    return new End({ originalSource: cardOriginalSource(card) })
+  }
 
   getChildren(): [] {
     return []

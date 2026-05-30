@@ -1,4 +1,6 @@
 import { DotCommand, type SpiceNodeInit, type SpiceSerializeOptions } from "../ast"
+import type { SpiceLogicalCard } from "../tokens"
+import { cardOriginalSource, directiveArgs, parseParamTokenStrings } from "../tokens/fromTokens"
 import { ParamList, type ParamsInput } from "../values"
 
 export class Options extends DotCommand {
@@ -9,6 +11,12 @@ export class Options extends DotCommand {
   constructor(values: ParamsInput, init: SpiceNodeInit = {}) {
     super(init)
     this.values = new ParamList(values)
+  }
+
+  static fromSpiceTokens(card: SpiceLogicalCard): Options {
+    return new Options(parseParamTokenStrings(directiveArgs(card)), {
+      originalSource: cardOriginalSource(card),
+    })
   }
 
   getChildren(): [] {

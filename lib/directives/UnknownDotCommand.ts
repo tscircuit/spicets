@@ -1,4 +1,6 @@
 import { DotCommand, type SpiceNodeInit, type SpiceSerializeOptions } from "../ast"
+import type { SpiceLogicalCard } from "../tokens"
+import { cardOriginalSource, directiveArgs, cardTokens } from "../tokens/fromTokens"
 
 export class UnknownDotCommand extends DotCommand {
   readonly type = "unknown_dot_command" as const
@@ -9,6 +11,15 @@ export class UnknownDotCommand extends DotCommand {
     super(init)
     this.command = init.command
     this.args = init.args
+  }
+
+  static fromSpiceTokens(card: SpiceLogicalCard): UnknownDotCommand {
+    const [head] = cardTokens(card)
+    return new UnknownDotCommand({
+      command: head?.raw ?? "",
+      args: directiveArgs(card),
+      originalSource: cardOriginalSource(card),
+    })
   }
 
   getChildren(): [] {

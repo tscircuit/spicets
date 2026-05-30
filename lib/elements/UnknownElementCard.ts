@@ -1,4 +1,6 @@
 import type { SpiceNodeInit, SpiceSerializeOptions } from "../ast"
+import type { SpiceLogicalCard } from "../tokens"
+import { cardOriginalSource, elementArgs, elementName } from "../tokens/fromTokens"
 import type { NodeRefInput } from "../values"
 import { ElementCard } from "./ElementCard"
 
@@ -16,6 +18,16 @@ export class UnknownElementCard extends ElementCard {
     super(init)
     this.designator = init.designator
     this.tokens = init.tokens
+  }
+
+  static fromSpiceTokens(card: SpiceLogicalCard): UnknownElementCard {
+    const name = elementName(card)
+    return new UnknownElementCard({
+      name,
+      designator: name[0]?.toUpperCase() ?? "",
+      tokens: elementArgs(card),
+      originalSource: cardOriginalSource(card),
+    })
   }
 
   toSource(options?: SpiceSerializeOptions): string {

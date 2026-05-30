@@ -1,4 +1,6 @@
 import { DotCommand, type SpiceNodeInit, type SpiceSerializeOptions } from "../ast"
+import type { SpiceLogicalCard } from "../tokens"
+import { cardOriginalSource } from "../tokens/fromTokens"
 
 export class ControlBlock extends DotCommand {
   readonly type = "control" as const
@@ -8,6 +10,13 @@ export class ControlBlock extends DotCommand {
   constructor(init: SpiceNodeInit & { lines: string[] }) {
     super(init)
     this.lines = init.lines
+  }
+
+  static fromSpiceTokens(card: SpiceLogicalCard): ControlBlock {
+    return new ControlBlock({
+      lines: [],
+      originalSource: cardOriginalSource(card),
+    })
   }
 
   getChildren(): [] {
