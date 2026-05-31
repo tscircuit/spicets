@@ -1,4 +1,8 @@
-import { DotCommand, type SpiceNodeInit, type SpiceSerializeOptions } from "../ast"
+import {
+  DotCommand,
+  type SpiceNodeInit,
+  type SpiceSerializeOptions,
+} from "../ast"
 import type { SpiceLogicalCard } from "../tokens"
 import { SpiceTokenCard } from "../tokens/fromTokens"
 import { ParamList, type ParamsInput } from "../values"
@@ -26,7 +30,8 @@ export class Options extends DotCommand {
   }
 
   toSource(options?: SpiceSerializeOptions): string {
-    if (options?.format !== "pretty" && this.originalSource !== undefined) return this.originalSource
+    if (options?.format !== "pretty" && this.originalSource !== undefined)
+      return this.originalSource
     return `${this.command} ${this.values.getString(options)}`.trimEnd()
   }
 }

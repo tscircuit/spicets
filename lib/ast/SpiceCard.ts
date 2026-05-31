@@ -39,7 +39,7 @@ export abstract class SpiceCard extends SpiceNode {
           : first.type === "comment"
             ? "comment"
             : first.type === "identifier"
-              ? first.raw[0]?.toUpperCase() ?? defaultToken
+              ? (first.raw[0]?.toUpperCase() ?? defaultToken)
               : first.type
     const ClassDef =
       SpiceCard.classes[key.toLowerCase()] ??

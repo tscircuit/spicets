@@ -7,7 +7,9 @@ test("renames nodes across root-level elements and subcircuits", () => {
       new Resistor({ name: "R1", nodes: ["old", "0"], resistance: "1k" }),
       new Subckt({
         name: "cell",
-        cards: [new Resistor({ name: "R2", nodes: ["old", "out"], resistance: "2k" })],
+        cards: [
+          new Resistor({ name: "R2", nodes: ["old", "out"], resistance: "2k" }),
+        ],
       }),
     ],
     trailingNewline: false,

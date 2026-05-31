@@ -1,4 +1,9 @@
-import { SpiceCard, type SpiceNode, type SpiceNodeInit, type SpiceSerializeOptions } from "../ast"
+import {
+  SpiceCard,
+  type SpiceNode,
+  type SpiceNodeInit,
+  type SpiceSerializeOptions,
+} from "../ast"
 import {
   NodeRef,
   ParamList,
@@ -13,11 +18,13 @@ export abstract class ElementCard extends SpiceCard {
   nodes: NodeRef[]
   params: ParamList
 
-  constructor(init: SpiceNodeInit & {
-    name: string
-    nodes?: NodeRefInput[]
-    params?: ParamsInput
-  }) {
+  constructor(
+    init: SpiceNodeInit & {
+      name: string
+      nodes?: NodeRefInput[]
+      params?: ParamsInput
+    },
+  ) {
     super(init)
     this.name = init.name
     this.nodes = (init.nodes ?? []).map(normalizeNodeRef)
@@ -34,7 +41,10 @@ export abstract class ElementCard extends SpiceCard {
     return []
   }
 
-  protected formatParts(parts: Array<string | undefined>, options?: SpiceSerializeOptions): string {
+  protected formatParts(
+    parts: Array<string | undefined>,
+    options?: SpiceSerializeOptions,
+  ): string {
     if (options?.format !== "pretty" && this.originalSource !== undefined) {
       return this.originalSource
     }

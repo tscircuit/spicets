@@ -10,12 +10,14 @@ export class UnknownElementCard extends ElementCard {
   designator: string
   tokens: string[]
 
-  constructor(init: SpiceNodeInit & {
-    name: string
-    designator: string
-    nodes?: NodeRefInput[]
-    tokens: string[]
-  }) {
+  constructor(
+    init: SpiceNodeInit & {
+      name: string
+      designator: string
+      nodes?: NodeRefInput[]
+      tokens: string[]
+    },
+  ) {
     super(init)
     this.designator = init.designator
     this.tokens = init.tokens

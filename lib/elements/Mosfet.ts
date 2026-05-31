@@ -9,12 +9,19 @@ export class Mosfet extends ElementCard {
   readonly type = "mosfet" as const
   model: string
 
-  constructor(init: SpiceNodeInit & {
-    name: string
-    nodes: [drain: NodeRefInput, gate: NodeRefInput, source: NodeRefInput, bulk: NodeRefInput]
-    model: string
-    params?: ParamsInput
-  }) {
+  constructor(
+    init: SpiceNodeInit & {
+      name: string
+      nodes: [
+        drain: NodeRefInput,
+        gate: NodeRefInput,
+        source: NodeRefInput,
+        bulk: NodeRefInput,
+      ]
+      model: string
+      params?: ParamsInput
+    },
+  ) {
     super(init)
     this.model = init.model
   }
@@ -23,7 +30,12 @@ export class Mosfet extends ElementCard {
     const tokens = SpiceTokenCard.from(card)
     return new Mosfet({
       name: tokens.head(),
-      nodes: [tokens.arg(0) ?? "", tokens.arg(1) ?? "", tokens.arg(2) ?? "", tokens.arg(3) ?? ""],
+      nodes: [
+        tokens.arg(0) ?? "",
+        tokens.arg(1) ?? "",
+        tokens.arg(2) ?? "",
+        tokens.arg(3) ?? "",
+      ],
       model: tokens.arg(4) ?? "",
       params: tokens.paramsAfter(5),
       originalSource: tokens.originalSource,

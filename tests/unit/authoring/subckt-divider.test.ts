@@ -1,5 +1,12 @@
 import { expect, test } from "bun:test"
-import { Op, Resistor, SpiceNetlist, Subckt, SubcktInstance, VoltageSource } from "lib"
+import {
+  Op,
+  Resistor,
+  SpiceNetlist,
+  Subckt,
+  SubcktInstance,
+  VoltageSource,
+} from "lib"
 
 test("authors a subcircuit and instance with params", () => {
   const divider = new Subckt({
@@ -7,8 +14,16 @@ test("authors a subcircuit and instance with params", () => {
     pins: ["vin", "vout", "0"],
     params: { rtop: "10k", rbot: "10k" },
     cards: [
-      new Resistor({ name: "Rtop", nodes: ["vin", "vout"], resistance: "{rtop}" }),
-      new Resistor({ name: "Rbot", nodes: ["vout", "0"], resistance: "{rbot}" }),
+      new Resistor({
+        name: "Rtop",
+        nodes: ["vin", "vout"],
+        resistance: "{rtop}",
+      }),
+      new Resistor({
+        name: "Rbot",
+        nodes: ["vout", "0"],
+        resistance: "{rbot}",
+      }),
     ],
   })
   const netlist = new SpiceNetlist({

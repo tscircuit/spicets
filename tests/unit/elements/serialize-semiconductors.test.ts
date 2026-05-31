@@ -3,12 +3,14 @@ import { Bjt, Diode, Mosfet } from "lib"
 
 test("serializes semiconductor cards", () => {
   expect(
-    new Diode({ name: "D1", nodes: ["an", "cath"], model: "DFAST" })
-      .toSource({ format: "pretty" }),
+    new Diode({ name: "D1", nodes: ["an", "cath"], model: "DFAST" }).toSource({
+      format: "pretty",
+    }),
   ).toBe("D1 an cath DFAST")
   expect(
-    new Bjt({ name: "Q1", nodes: ["c", "b", "e"], model: "QNPN" })
-      .toSource({ format: "pretty" }),
+    new Bjt({ name: "Q1", nodes: ["c", "b", "e"], model: "QNPN" }).toSource({
+      format: "pretty",
+    }),
   ).toBe("Q1 c b e QNPN")
   expect(
     new Mosfet({

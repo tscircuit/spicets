@@ -1,5 +1,14 @@
 import { expect, test } from "bun:test"
-import { Include, Lib, Model, Options, Param, Save, Temp, parseSpiceCard } from "lib"
+import {
+  Include,
+  Lib,
+  Model,
+  Options,
+  Param,
+  Save,
+  Temp,
+  parseSpiceCard,
+} from "lib"
 
 test("parses model, param, include, lib, options, temp, and save commands", () => {
   expect(parseSpiceCard(".param rload=10k")).toBeInstanceOf(Param)

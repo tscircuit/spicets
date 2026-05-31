@@ -24,7 +24,8 @@ export function parseSpiceNetlist(
   const bodyCards = title === undefined ? logicalCards : logicalCards.slice(1)
   const cards = parseLogicalCards(bodyCards, options)
   const endIndex = cards.findIndex((card) => card instanceof End)
-  const end = endIndex === -1 ? undefined : (cards.splice(endIndex, 1)[0] as End)
+  const end =
+    endIndex === -1 ? undefined : (cards.splice(endIndex, 1)[0] as End)
 
   return new SpiceNetlist({
     title,

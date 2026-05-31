@@ -9,15 +9,24 @@ export class Bjt extends ElementCard {
   readonly type = "bjt" as const
   model: string
 
-  constructor(init: SpiceNodeInit & {
-    name: string
-    nodes: [collector: NodeRefInput, base: NodeRefInput, emitter: NodeRefInput, substrate?: NodeRefInput]
-    model: string
-    params?: ParamsInput
-  }) {
+  constructor(
+    init: SpiceNodeInit & {
+      name: string
+      nodes: [
+        collector: NodeRefInput,
+        base: NodeRefInput,
+        emitter: NodeRefInput,
+        substrate?: NodeRefInput,
+      ]
+      model: string
+      params?: ParamsInput
+    },
+  ) {
     super({
       ...init,
-      nodes: init.nodes.filter((node): node is NodeRefInput => node !== undefined),
+      nodes: init.nodes.filter(
+        (node): node is NodeRefInput => node !== undefined,
+      ),
     })
     this.model = init.model
   }
@@ -26,7 +35,12 @@ export class Bjt extends ElementCard {
     const tokens = SpiceTokenCard.from(card)
     const hasSubstrate = tokens.args().length > 4
     const nodes: [string, string, string, string?] = hasSubstrate
-      ? [tokens.arg(0) ?? "", tokens.arg(1) ?? "", tokens.arg(2) ?? "", tokens.arg(3) ?? ""]
+      ? [
+          tokens.arg(0) ?? "",
+          tokens.arg(1) ?? "",
+          tokens.arg(2) ?? "",
+          tokens.arg(3) ?? "",
+        ]
       : [tokens.arg(0) ?? "", tokens.arg(1) ?? "", tokens.arg(2) ?? ""]
     const modelIndex = hasSubstrate ? 4 : 3
     return new Bjt({

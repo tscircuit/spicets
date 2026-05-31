@@ -20,7 +20,9 @@ export class ParamList {
   }
 
   get(name: string): SpiceValue | undefined {
-    return this.values.find(([key]) => key.toLowerCase() === name.toLowerCase())?.[1]
+    return this.values.find(
+      ([key]) => key.toLowerCase() === name.toLowerCase(),
+    )?.[1]
   }
 
   set(name: string, value: SpiceValueInput): void {

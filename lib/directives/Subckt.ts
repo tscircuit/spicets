@@ -1,4 +1,10 @@
-import { DotCommand, SpiceCard, type SpiceNode, type SpiceNodeInit, type SpiceSerializeOptions } from "../ast"
+import {
+  DotCommand,
+  SpiceCard,
+  type SpiceNode,
+  type SpiceNodeInit,
+  type SpiceSerializeOptions,
+} from "../ast"
 import type { SpiceCardInput } from "../roots"
 import type { SpiceLogicalCard } from "../tokens"
 import { SpiceTokenCard } from "../tokens/fromTokens"
@@ -19,13 +25,15 @@ export class Subckt extends DotCommand {
   cards: SpiceCardInput[]
   endsName?: string
 
-  constructor(init: SpiceNodeInit & {
-    name: string
-    pins?: NodeRefInput[]
-    params?: ParamsInput
-    cards?: SpiceCardInput[]
-    endsName?: string
-  }) {
+  constructor(
+    init: SpiceNodeInit & {
+      name: string
+      pins?: NodeRefInput[]
+      params?: ParamsInput
+      cards?: SpiceCardInput[]
+      endsName?: string
+    },
+  ) {
     super(init)
     this.name = init.name
     this.pins = (init.pins ?? []).map(normalizeNodeRef)
@@ -59,7 +67,8 @@ export class Subckt extends DotCommand {
   }
 
   toSource(options?: SpiceSerializeOptions): string {
-    if (options?.format !== "pretty" && this.originalSource !== undefined) return this.originalSource
+    if (options?.format !== "pretty" && this.originalSource !== undefined)
+      return this.originalSource
     const params = this.params.getString(options)
     return [
       [

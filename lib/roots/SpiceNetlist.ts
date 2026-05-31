@@ -1,4 +1,10 @@
-import { AnalysisCommand, DotCommand, SpiceNode, type SpiceDialect, type SpiceSerializeOptions } from "../ast"
+import {
+  AnalysisCommand,
+  DotCommand,
+  SpiceNode,
+  type SpiceDialect,
+  type SpiceSerializeOptions,
+} from "../ast"
 import { End, Model, Subckt } from "../directives"
 import { ElementCard } from "../elements"
 import type { SpiceCardInput } from "./types"
@@ -37,11 +43,15 @@ export class SpiceNetlist extends SpiceNode {
   }
 
   get elements(): ElementCard[] {
-    return this.cards.filter((card): card is ElementCard => card.cardKind === "element")
+    return this.cards.filter(
+      (card): card is ElementCard => card.cardKind === "element",
+    )
   }
 
   get directives(): DotCommand[] {
-    return this.cards.filter((card): card is DotCommand => card.cardKind === "directive")
+    return this.cards.filter(
+      (card): card is DotCommand => card.cardKind === "directive",
+    )
   }
 
   get subckts(): Subckt[] {
@@ -53,7 +63,9 @@ export class SpiceNetlist extends SpiceNode {
   }
 
   get analyses(): AnalysisCommand[] {
-    return this.cards.filter((card): card is AnalysisCommand => card instanceof AnalysisCommand)
+    return this.cards.filter(
+      (card): card is AnalysisCommand => card instanceof AnalysisCommand,
+    )
   }
 
   add(card: SpiceCardInput): void {
@@ -71,7 +83,9 @@ export class SpiceNetlist extends SpiceNode {
   }
 
   findModel(name: string): Model | undefined {
-    return this.models.find((model) => model.name.toLowerCase() === name.toLowerCase())
+    return this.models.find(
+      (model) => model.name.toLowerCase() === name.toLowerCase(),
+    )
   }
 
   findSubckt(name: string): Subckt | undefined {

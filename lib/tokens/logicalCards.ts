@@ -89,7 +89,9 @@ export function tokenValue(token: SpiceToken | undefined): string | undefined {
   return token.raw
 }
 
-export function groupSpiceBlocks(cards: SpiceLogicalCard[]): SpiceLogicalCard[] {
+export function groupSpiceBlocks(
+  cards: SpiceLogicalCard[],
+): SpiceLogicalCard[] {
   const grouped: SpiceLogicalCard[] = []
 
   for (let i = 0; i < cards.length; i += 1) {

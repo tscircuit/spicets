@@ -1,7 +1,12 @@
 import type { SpiceNodeInit, SpiceSerializeOptions } from "../ast"
 import type { SpiceLogicalCard } from "../tokens"
 import { SpiceTokenCard } from "../tokens/fromTokens"
-import { SpiceValue, type NodeRefInput, type SpiceValueInput, normalizeValue } from "../values"
+import {
+  SpiceValue,
+  type NodeRefInput,
+  type SpiceValueInput,
+  normalizeValue,
+} from "../values"
 import { ElementCard } from "./ElementCard"
 
 export class Vccs extends ElementCard {
@@ -9,12 +14,14 @@ export class Vccs extends ElementCard {
   readonly type = "vccs" as const
   transconductance: SpiceValue
 
-  constructor(init: SpiceNodeInit & {
-    name: string
-    output: [NodeRefInput, NodeRefInput]
-    control: [NodeRefInput, NodeRefInput]
-    transconductance: SpiceValueInput
-  }) {
+  constructor(
+    init: SpiceNodeInit & {
+      name: string
+      output: [NodeRefInput, NodeRefInput]
+      control: [NodeRefInput, NodeRefInput]
+      transconductance: SpiceValueInput
+    },
+  ) {
     super({ ...init, nodes: [...init.output, ...init.control] })
     this.transconductance = normalizeValue(init.transconductance)
   }

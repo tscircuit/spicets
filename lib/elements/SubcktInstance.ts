@@ -9,12 +9,14 @@ export class SubcktInstance extends ElementCard {
   readonly type = "subckt_instance" as const
   subckt: string
 
-  constructor(init: SpiceNodeInit & {
-    name: string
-    nodes: NodeRefInput[]
-    subckt: string
-    params?: ParamsInput
-  }) {
+  constructor(
+    init: SpiceNodeInit & {
+      name: string
+      nodes: NodeRefInput[]
+      subckt: string
+      params?: ParamsInput
+    },
+  ) {
     super(init)
     this.subckt = init.subckt
   }

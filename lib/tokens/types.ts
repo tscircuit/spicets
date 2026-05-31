@@ -47,7 +47,7 @@ export type SpiceTokenNumber = BaseToken & {
 export type SpiceTokenString = BaseToken & {
   type: "string"
   value: string
-  quote: "\"" | "'"
+  quote: '"' | "'"
 }
 
 export type SpiceTokenOperator = BaseToken & {

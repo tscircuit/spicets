@@ -16,7 +16,8 @@ export class End extends DotCommand {
   }
 
   toSource(options?: SpiceSerializeOptions): string {
-    if (options?.format !== "pretty" && this.originalSource !== undefined) return this.originalSource
+    if (options?.format !== "pretty" && this.originalSource !== undefined)
+      return this.originalSource
     return this.command
   }
 }

@@ -1,4 +1,8 @@
-import { DotCommand, type SpiceNodeInit, type SpiceSerializeOptions } from "../ast"
+import {
+  DotCommand,
+  type SpiceNodeInit,
+  type SpiceSerializeOptions,
+} from "../ast"
 import type { SpiceLogicalCard } from "../tokens"
 import { SpiceTokenCard } from "../tokens/fromTokens"
 import { SpiceValue, type SpiceValueInput, normalizeValue } from "../values"
@@ -24,8 +28,12 @@ export class Temp extends DotCommand {
   }
 
   toSource(options?: SpiceSerializeOptions): string {
-    if (options?.format !== "pretty" && this.originalSource !== undefined) return this.originalSource
-    return [this.command, ...this.values.map((value) => value.getString())].join(" ")
+    if (options?.format !== "pretty" && this.originalSource !== undefined)
+      return this.originalSource
+    return [
+      this.command,
+      ...this.values.map((value) => value.getString()),
+    ].join(" ")
   }
 }
 DotCommand.register(Temp)

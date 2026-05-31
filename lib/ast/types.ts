@@ -33,4 +33,9 @@ export interface SpiceNodeInit {
   trailingComment?: string
 }
 
-export type SpiceCardKind = "element" | "directive" | "comment" | "blank" | "raw"
+export type SpiceCardKind =
+  | "element"
+  | "directive"
+  | "comment"
+  | "blank"
+  | "raw"

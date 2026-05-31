@@ -1,4 +1,8 @@
-import { SpiceNode, type SpiceDialect, type SpiceSerializeOptions } from "../ast"
+import {
+  SpiceNode,
+  type SpiceDialect,
+  type SpiceSerializeOptions,
+} from "../ast"
 import { LibSection } from "./LibSection"
 import type { SpiceCardInput } from "./types"
 

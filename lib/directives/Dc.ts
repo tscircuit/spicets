@@ -1,4 +1,8 @@
-import { AnalysisCommand, type SpiceNodeInit, type SpiceSerializeOptions } from "../ast"
+import {
+  AnalysisCommand,
+  type SpiceNodeInit,
+  type SpiceSerializeOptions,
+} from "../ast"
 import type { SpiceLogicalCard } from "../tokens"
 import { SpiceTokenCard } from "../tokens/fromTokens"
 import { SpiceValue, type SpiceValueInput, normalizeValue } from "../values"
@@ -23,7 +27,9 @@ export class Dc extends AnalysisCommand {
   command = ".dc"
   sweeps: DcSweep[]
 
-  constructor(init: SpiceNodeInit & (DcSweepInput | { sweeps: DcSweepInput[] })) {
+  constructor(
+    init: SpiceNodeInit & (DcSweepInput | { sweeps: DcSweepInput[] }),
+  ) {
     super(init)
     const sweeps = "sweeps" in init ? init.sweeps : [init]
     this.sweeps = sweeps.map((sweep) => ({
@@ -50,7 +56,8 @@ export class Dc extends AnalysisCommand {
   }
 
   toSource(options?: SpiceSerializeOptions): string {
-    if (options?.format !== "pretty" && this.originalSource !== undefined) return this.originalSource
+    if (options?.format !== "pretty" && this.originalSource !== undefined)
+      return this.originalSource
     return [
       this.command,
       ...this.sweeps.flatMap((sweep) => [

@@ -1,4 +1,8 @@
-import { DotCommand, type SpiceNodeInit, type SpiceSerializeOptions } from "../ast"
+import {
+  DotCommand,
+  type SpiceNodeInit,
+  type SpiceSerializeOptions,
+} from "../ast"
 import type { SpiceLogicalCard } from "../tokens"
 import { SpiceTokenCard } from "../tokens/fromTokens"
 import { ParamList, type ParamsInput } from "../values"
@@ -11,7 +15,9 @@ export class Model extends DotCommand {
   modelType: string
   params: ParamList
 
-  constructor(init: SpiceNodeInit & { name: string; type: string; params?: ParamsInput }) {
+  constructor(
+    init: SpiceNodeInit & { name: string; type: string; params?: ParamsInput },
+  ) {
     super(init)
     this.name = init.name
     this.modelType = init.type
@@ -33,7 +39,8 @@ export class Model extends DotCommand {
   }
 
   toSource(options?: SpiceSerializeOptions): string {
-    if (options?.format !== "pretty" && this.originalSource !== undefined) return this.originalSource
+    if (options?.format !== "pretty" && this.originalSource !== undefined)
+      return this.originalSource
     const params = this.params.getString(options)
     return [this.command, this.name, this.modelType, params && `(${params})`]
       .filter(Boolean)

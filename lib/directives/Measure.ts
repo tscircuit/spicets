@@ -1,4 +1,8 @@
-import { DotCommand, type SpiceNodeInit, type SpiceSerializeOptions } from "../ast"
+import {
+  DotCommand,
+  type SpiceNodeInit,
+  type SpiceSerializeOptions,
+} from "../ast"
 import type { SpiceLogicalCard } from "../tokens"
 import { SpiceTokenCard } from "../tokens/fromTokens"
 
@@ -10,11 +14,13 @@ export class Measure extends DotCommand {
   name: string
   expression: string
 
-  constructor(init: SpiceNodeInit & {
-    analysis?: string
-    name: string
-    expression: string
-  }) {
+  constructor(
+    init: SpiceNodeInit & {
+      analysis?: string
+      name: string
+      expression: string
+    },
+  ) {
     super(init)
     this.analysis = init.analysis
     this.name = init.name
@@ -36,7 +42,8 @@ export class Measure extends DotCommand {
   }
 
   toSource(options?: SpiceSerializeOptions): string {
-    if (options?.format !== "pretty" && this.originalSource !== undefined) return this.originalSource
+    if (options?.format !== "pretty" && this.originalSource !== undefined)
+      return this.originalSource
     return [this.command, this.analysis, this.name, this.expression]
       .filter(Boolean)
       .join(" ")

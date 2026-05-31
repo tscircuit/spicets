@@ -14,7 +14,9 @@ export class BlankLine extends SpiceTrivia {
   }
 
   static fromSpiceTokens(card: SpiceLogicalCard): BlankLine {
-    return new BlankLine({ originalSource: SpiceTokenCard.from(card).originalSource })
+    return new BlankLine({
+      originalSource: SpiceTokenCard.from(card).originalSource,
+    })
   }
 
   getChildren(): [] {

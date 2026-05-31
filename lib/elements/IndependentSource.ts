@@ -17,14 +17,16 @@ export abstract class IndependentSource extends ElementCard {
   ac?: AcSpec
   transient?: SourceWaveformInput
 
-  constructor(init: SpiceNodeInit & {
-    name: string
-    nodes: [NodeRefInput, NodeRefInput]
-    dc?: SpiceValueInput
-    ac?: AcSpecInput
-    transient?: SourceWaveformInput
-    params?: ParamsInput
-  }) {
+  constructor(
+    init: SpiceNodeInit & {
+      name: string
+      nodes: [NodeRefInput, NodeRefInput]
+      dc?: SpiceValueInput
+      ac?: AcSpecInput
+      transient?: SourceWaveformInput
+      params?: ParamsInput
+    },
+  ) {
     super(init)
     this.dc = init.dc === undefined ? undefined : normalizeValue(init.dc)
     this.ac = init.ac === undefined ? undefined : normalizeAcSpec(init.ac)
@@ -40,7 +42,8 @@ export abstract class IndependentSource extends ElementCard {
     if (this.dc !== undefined) parts.push("DC", this.dc.getString())
     if (this.ac !== undefined) {
       parts.push("AC")
-      if (this.ac.magnitude !== undefined) parts.push(this.ac.magnitude.getString())
+      if (this.ac.magnitude !== undefined)
+        parts.push(this.ac.magnitude.getString())
       if (this.ac.phase !== undefined) parts.push(this.ac.phase.getString())
     }
     if (this.transient !== undefined) parts.push(this.transient.toSource())

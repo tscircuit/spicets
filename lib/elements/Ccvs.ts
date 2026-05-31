@@ -1,7 +1,12 @@
 import type { SpiceNodeInit, SpiceSerializeOptions } from "../ast"
 import type { SpiceLogicalCard } from "../tokens"
 import { SpiceTokenCard } from "../tokens/fromTokens"
-import { SpiceValue, type NodeRefInput, type SpiceValueInput, normalizeValue } from "../values"
+import {
+  SpiceValue,
+  type NodeRefInput,
+  type SpiceValueInput,
+  normalizeValue,
+} from "../values"
 import { ElementCard } from "./ElementCard"
 
 export class Ccvs extends ElementCard {
@@ -10,12 +15,14 @@ export class Ccvs extends ElementCard {
   source: string
   transresistance: SpiceValue
 
-  constructor(init: SpiceNodeInit & {
-    name: string
-    output: [NodeRefInput, NodeRefInput]
-    source: string
-    transresistance: SpiceValueInput
-  }) {
+  constructor(
+    init: SpiceNodeInit & {
+      name: string
+      output: [NodeRefInput, NodeRefInput]
+      source: string
+      transresistance: SpiceValueInput
+    },
+  ) {
     super({ ...init, nodes: init.output })
     this.source = init.source
     this.transresistance = normalizeValue(init.transresistance)

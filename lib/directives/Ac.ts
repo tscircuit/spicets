@@ -1,4 +1,8 @@
-import { AnalysisCommand, type SpiceNodeInit, type SpiceSerializeOptions } from "../ast"
+import {
+  AnalysisCommand,
+  type SpiceNodeInit,
+  type SpiceSerializeOptions,
+} from "../ast"
 import type { SpiceLogicalCard } from "../tokens"
 import { SpiceTokenCard } from "../tokens/fromTokens"
 import { SpiceValue, type SpiceValueInput, normalizeValue } from "../values"
@@ -12,12 +16,14 @@ export class Ac extends AnalysisCommand {
   start: SpiceValue
   stop: SpiceValue
 
-  constructor(init: SpiceNodeInit & {
-    sweep: "dec" | "oct" | "lin"
-    points: number
-    start: SpiceValueInput
-    stop: SpiceValueInput
-  }) {
+  constructor(
+    init: SpiceNodeInit & {
+      sweep: "dec" | "oct" | "lin"
+      points: number
+      start: SpiceValueInput
+      stop: SpiceValueInput
+    },
+  ) {
     super(init)
     this.sweep = init.sweep
     this.points = init.points
@@ -41,7 +47,8 @@ export class Ac extends AnalysisCommand {
   }
 
   toSource(options?: SpiceSerializeOptions): string {
-    if (options?.format !== "pretty" && this.originalSource !== undefined) return this.originalSource
+    if (options?.format !== "pretty" && this.originalSource !== undefined)
+      return this.originalSource
     return `${this.command} ${this.sweep} ${this.points} ${this.start.getString()} ${this.stop.getString()}`
   }
 }

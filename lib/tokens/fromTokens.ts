@@ -48,9 +48,7 @@ export class SpiceTokenCard {
   }
 
   args(): string[] {
-    return this.tokens
-      .slice(1)
-      .map((token) => tokenText(token) ?? token.raw)
+    return this.tokens.slice(1).map((token) => tokenText(token) ?? token.raw)
   }
 
   argsAfter(index: number): string[] {
@@ -71,16 +69,23 @@ export class SpiceTokenCard {
 
   argAfterKeyword(keyword: string): string | undefined {
     const match = this.findKeyword(keyword)
-    return match === undefined ? undefined : tokenText(this.tokens[match.tokenIndex + match.tokenCount])
+    return match === undefined
+      ? undefined
+      : tokenText(this.tokens[match.tokenIndex + match.tokenCount])
   }
 
   hasKeyword(keyword: string): boolean {
     return this.findKeyword(keyword) !== undefined
   }
 
-  sweepArg(index: number, fallback: "dec" | "oct" | "lin"): "dec" | "oct" | "lin" {
+  sweepArg(
+    index: number,
+    fallback: "dec" | "oct" | "lin",
+  ): "dec" | "oct" | "lin" {
     const value = this.arg(index)?.toLowerCase()
-    return value === "oct" || value === "lin" || value === "dec" ? value : fallback
+    return value === "oct" || value === "lin" || value === "dec"
+      ? value
+      : fallback
   }
 
   paramsAfter(index: number): Array<[string, string]> {
@@ -105,11 +110,18 @@ export class SpiceTokenCard {
     return this.argsAfter(startIndex).join(" ")
   }
 
-  private findKeyword(keyword: string, startArgIndex = 0): KeywordMatch | undefined {
+  private findKeyword(
+    keyword: string,
+    startArgIndex = 0,
+  ): KeywordMatch | undefined {
     const keywordHasColon = keyword.endsWith(":")
     const keywordName = keywordHasColon ? keyword.slice(0, -1) : keyword
 
-    for (let tokenIndex = 1 + startArgIndex; tokenIndex < this.tokens.length; tokenIndex += 1) {
+    for (
+      let tokenIndex = 1 + startArgIndex;
+      tokenIndex < this.tokens.length;
+      tokenIndex += 1
+    ) {
       const token = this.tokens[tokenIndex]
       const value = tokenText(token)
       if (value === undefined) continue
@@ -157,7 +169,8 @@ export class SpiceTokenCard {
       ) {
         const name = tokenText(nameToken)
         const value = tokenText(valueToken)
-        if (name !== undefined && value !== undefined) entries.push([name, value])
+        if (name !== undefined && value !== undefined)
+          entries.push([name, value])
         index += 3
         continue
       }

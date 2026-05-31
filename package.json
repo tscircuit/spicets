@@ -13,7 +13,9 @@
   "scripts": {
     "build": "tsup-node lib/index.ts --format esm --dts",
     "test": "bun test",
-    "typecheck": "bunx tsc --noEmit"
+    "typecheck": "bunx tsc --noEmit",
+    "format": "biome format --write .",
+    "format:check": "biome format ."
   },
   "exports": {
     ".": {
@@ -23,6 +25,7 @@
   },
   "types": "./dist/index.d.ts",
   "devDependencies": {
+    "@biomejs/biome": "^2.2.4",
     "@types/bun": "latest",
     "tsup": "^8.5.0",
     "typescript": "^5.0.0"

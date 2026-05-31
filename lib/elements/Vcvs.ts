@@ -1,7 +1,12 @@
 import type { SpiceNodeInit, SpiceSerializeOptions } from "../ast"
 import type { SpiceLogicalCard } from "../tokens"
 import { SpiceTokenCard } from "../tokens/fromTokens"
-import { SpiceValue, type NodeRefInput, type SpiceValueInput, normalizeValue } from "../values"
+import {
+  SpiceValue,
+  type NodeRefInput,
+  type SpiceValueInput,
+  normalizeValue,
+} from "../values"
 import { ElementCard } from "./ElementCard"
 
 export class Vcvs extends ElementCard {
@@ -9,12 +14,14 @@ export class Vcvs extends ElementCard {
   readonly type = "vcvs" as const
   gain: SpiceValue
 
-  constructor(init: SpiceNodeInit & {
-    name: string
-    output: [NodeRefInput, NodeRefInput]
-    control: [NodeRefInput, NodeRefInput]
-    gain: SpiceValueInput
-  }) {
+  constructor(
+    init: SpiceNodeInit & {
+      name: string
+      output: [NodeRefInput, NodeRefInput]
+      control: [NodeRefInput, NodeRefInput]
+      gain: SpiceValueInput
+    },
+  ) {
     super({ ...init, nodes: [...init.output, ...init.control] })
     this.gain = normalizeValue(init.gain)
   }
@@ -32,7 +39,11 @@ export class Vcvs extends ElementCard {
 
   toSource(options?: SpiceSerializeOptions): string {
     return this.formatParts(
-      [this.name, ...this.nodes.map((node) => node.getString()), this.gain.getString()],
+      [
+        this.name,
+        ...this.nodes.map((node) => node.getString()),
+        this.gain.getString(),
+      ],
       options,
     )
   }

@@ -1,7 +1,13 @@
 import type { SpiceNodeInit, SpiceSerializeOptions } from "../ast"
 import type { SpiceLogicalCard } from "../tokens"
 import { SpiceTokenCard } from "../tokens/fromTokens"
-import { SpiceValue, type NodeRefInput, type ParamsInput, type SpiceValueInput, normalizeValue } from "../values"
+import {
+  SpiceValue,
+  type NodeRefInput,
+  type ParamsInput,
+  type SpiceValueInput,
+  normalizeValue,
+} from "../values"
 import { ElementCard } from "./ElementCard"
 
 export class Inductor extends ElementCard {
@@ -10,13 +16,15 @@ export class Inductor extends ElementCard {
   inductance: SpiceValue
   initialCondition?: SpiceValue
 
-  constructor(init: SpiceNodeInit & {
-    name: string
-    nodes: [NodeRefInput, NodeRefInput]
-    inductance: SpiceValueInput
-    ic?: SpiceValueInput
-    params?: ParamsInput
-  }) {
+  constructor(
+    init: SpiceNodeInit & {
+      name: string
+      nodes: [NodeRefInput, NodeRefInput]
+      inductance: SpiceValueInput
+      ic?: SpiceValueInput
+      params?: ParamsInput
+    },
+  ) {
     super(init)
     this.inductance = normalizeValue(init.inductance)
     this.initialCondition =

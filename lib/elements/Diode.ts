@@ -9,12 +9,14 @@ export class Diode extends ElementCard {
   readonly type = "diode" as const
   model: string
 
-  constructor(init: SpiceNodeInit & {
-    name: string
-    nodes: [NodeRefInput, NodeRefInput]
-    model: string
-    params?: ParamsInput
-  }) {
+  constructor(
+    init: SpiceNodeInit & {
+      name: string
+      nodes: [NodeRefInput, NodeRefInput]
+      model: string
+      params?: ParamsInput
+    },
+  ) {
     super(init)
     this.model = init.model
   }

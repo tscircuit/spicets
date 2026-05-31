@@ -10,7 +10,10 @@ export class Comment extends SpiceTrivia {
   marker: "*" | ";" | "$"
   originalSource?: string
 
-  constructor(text: string, init: { marker?: "*" | ";" | "$"; originalSource?: string } = {}) {
+  constructor(
+    text: string,
+    init: { marker?: "*" | ";" | "$"; originalSource?: string } = {},
+  ) {
     super()
     this.text = text
     this.marker = init.marker ?? "*"
