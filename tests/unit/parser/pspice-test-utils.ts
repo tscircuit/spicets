@@ -9,7 +9,7 @@ import {
 } from "lib"
 
 export function parsePspiceFixture(name: string): SpiceNetlist {
-  const source = readFileSync(`examples/assets/${name}`, "utf8")
+  const source = readFileSync(`tests/assets/${name}`, "utf8")
   const netlist = parseSpiceNetlist(source, { dialect: "pspice" })
 
   expect(netlist.dialect).toBe("pspice")
