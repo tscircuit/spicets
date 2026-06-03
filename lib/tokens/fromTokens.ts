@@ -92,6 +92,20 @@ export class SpiceTokenCard {
     return this.readParamsFrom(1 + index)
   }
 
+  paramAfter(index: number, name: string): string | undefined {
+    const lowerName = name.toLowerCase()
+    return this.paramsAfter(index).find(
+      ([key]) => key.toLowerCase() === lowerName,
+    )?.[1]
+  }
+
+  paramsAfterExcept(index: number, names: string[]): Array<[string, string]> {
+    const lowerNames = new Set(names.map((name) => name.toLowerCase()))
+    return this.paramsAfter(index).filter(
+      ([key]) => !lowerNames.has(key.toLowerCase()),
+    )
+  }
+
   paramsAfterKeyword(keyword: string): Array<[string, string]> | undefined {
     const match = this.findKeyword(keyword)
     if (match === undefined) return undefined

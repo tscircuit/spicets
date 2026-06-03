@@ -1,0 +1,12 @@
+R1 1 4 2ohm
+R2 1 2 3ohm
+R3 3 4 4ohm
+R4 3 4 4.5ohm
+R5 4 0 9ohm
+V1 1 0 2.5V
+V2 3 2 3V
+I1 2 0 10A
+.DC V1 10 10 1
+.PRINT DC V(R1), V(R2), V(R3), V(R4), V(R5), V(V1), V(V2), V(I1), I(R1), I(R2), I(R3), I(R4), I(R5), I(V1), I(V2), I(I1)
+.OPTIONS NOPAGE
+.END

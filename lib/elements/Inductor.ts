@@ -37,7 +37,8 @@ export class Inductor extends ElementCard {
       name: tokens.head(),
       nodes: [tokens.arg(0) ?? "", tokens.arg(1) ?? ""],
       inductance: tokens.arg(2) ?? "",
-      params: tokens.paramsAfter(3),
+      ic: tokens.paramAfter(3, "ic"),
+      params: tokens.paramsAfterExcept(3, ["ic"]),
       originalSource: tokens.originalSource,
     })
   }

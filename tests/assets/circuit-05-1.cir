@@ -1,0 +1,7 @@
+R1 1 0 6ohm
+L1 1 0 7 IC=-10A
+C1 1 0 0.0238095 IC=0V    
+.TRAN 0.1pS 5s              	; analysis method
+.PROBE				; PROBE graphics output, trace V(t)
+.OPTIONS NOPAGE
+.END

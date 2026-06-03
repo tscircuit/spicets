@@ -1,0 +1,7 @@
+V1 1 0 AC 10V 0 ; 10 volts, 0 degrees phase 
+R1 1 2 50OHM 
+C1 2 0 0.02UF 
+.AC DEC 20 10KHZ 1MEGAHZ ; Analysis 
+.PROBE 			 ; PROBE graphics output 
+.OPTIONS NOPAGE 
+.END 

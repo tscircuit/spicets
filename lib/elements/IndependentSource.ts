@@ -1,4 +1,5 @@
 import type { SpiceNodeInit } from "../ast"
+import type { SpiceTokenCard } from "../tokens/fromTokens"
 import {
   SpiceValue,
   type AcSpec,
@@ -11,6 +12,34 @@ import {
   normalizeValue,
 } from "../values"
 import { ElementCard } from "./ElementCard"
+
+type ParsedIndependentSourceValues = {
+  dc?: SpiceValueInput
+  ac?: AcSpecInput
+}
+
+export function parseIndependentSourceValues(
+  tokens: SpiceTokenCard,
+): ParsedIndependentSourceValues {
+  const values: ParsedIndependentSourceValues = {}
+  const explicitDcValue = tokens.argAfterKeyword("dc")
+  const acKeywordArgIndex = tokens.keywordIndex("ac")
+
+  if (explicitDcValue !== undefined) {
+    values.dc = explicitDcValue
+  } else if (acKeywordArgIndex === -1) {
+    values.dc = tokens.arg(2)
+  }
+
+  if (acKeywordArgIndex !== -1) {
+    values.ac = {
+      magnitude: tokens.arg(acKeywordArgIndex + 1),
+      phase: tokens.arg(acKeywordArgIndex + 2),
+    }
+  }
+
+  return values
+}
 
 export abstract class IndependentSource extends ElementCard {
   dc?: SpiceValue
