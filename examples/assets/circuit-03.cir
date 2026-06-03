@@ -1,0 +1,7 @@
+V1 1 0 10V 			; source voltage 
+R1 1 2 50ohm 		; resistor 
+C1 2 0 0.02UF IC=0.0V 	; sets initial conditions 
+.TRAN 0.05US 5US UIC 	; Analysis 
+.PROBE 			; PROBE graphics output 
+.OPTIONS NOPAGE 
+.END 

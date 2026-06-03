@@ -47,6 +47,8 @@ export {
   Op,
   Options,
   Param,
+  Print,
+  Probe,
   Save,
   Subckt,
   Temp,
