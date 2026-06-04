@@ -1,0 +1,10 @@
+PSpice ABM VALUE current source
+V1 n1 0 SIN(0 1 10k)
+V2 n2 0 DC 0.5
+GPSK out 0 VALUE = {5MA*SIN(6.28*10kHz*TIME+V(n1))}
+GT load 0 VALUE = {200E-6*PWR(V(n1)*V(n2),1.5)}
+R1 out 0 1k
+R2 load 0 1k
+.TRAN 1us 1ms
+.PROBE V(out) V(load)
+.END

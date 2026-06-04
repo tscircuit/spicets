@@ -1,0 +1,7 @@
+PSpice ABM LAPLACE voltage source
+VIN in 0 AC 1
+ERC out 0 LAPLACE {V(in)} = {1/(1+.001*s)}
+RLOAD out 0 10k
+.AC DEC 20 10 100k
+.PROBE V(out)
+.END

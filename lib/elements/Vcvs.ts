@@ -8,6 +8,7 @@ import {
   normalizeValue,
 } from "../values"
 import { ElementCard } from "./ElementCard"
+import { isPspiceAbmForm, parsePspiceAbmVoltageSource } from "./PspiceAbmSource"
 
 export class Vcvs extends ElementCard {
   static spiceTokenKeys = ["E"]
@@ -28,6 +29,9 @@ export class Vcvs extends ElementCard {
 
   static fromSpiceTokens(card: SpiceLogicalCard): Vcvs {
     const tokens = SpiceTokenCard.from(card)
+    if (isPspiceAbmForm(tokens.arg(2))) {
+      return parsePspiceAbmVoltageSource(card) as unknown as Vcvs
+    }
     return new Vcvs({
       name: tokens.head(),
       output: [tokens.arg(0) ?? "", tokens.arg(1) ?? ""],

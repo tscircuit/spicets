@@ -17,7 +17,7 @@ export function parsePspiceFixture(name: string): SpiceNetlist {
   expect(netlist.cards).not.toContainEqual(expect.any(UnknownDotCommand))
   expect(netlist.cards).not.toContainEqual(expect.any(UnknownElementCard))
   expect(netlist.cards).not.toContainEqual(expect.any(RawCard))
-  expect(netlist.getString()).toBe(source)
+  expect(netlist.getString({ dialect: "pspice" })).toBe(source)
 
   return netlist
 }

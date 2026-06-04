@@ -1,0 +1,7 @@
+PSpice TRAN/OP with scheduled TMAX
+V1 in 0 PULSE(0 5 0 1ns 1ns 20ns 50ns)
+R1 in out 1k
+C1 out 0 10p IC=0
+.TRAN/OP .1ns 100ns 0ns {SCHEDULE(0,1ns,25ns,.1ns)}
+.PROBE V(out)
+.END

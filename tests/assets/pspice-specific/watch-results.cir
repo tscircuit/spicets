@@ -1,0 +1,8 @@
+PSpice WATCH analysis results
+V1 in 0 DC 0
+R1 in out 1k
+R2 out 0 1k
+.DC V1 -1V 4V 0.5V
+.WATCH DC V(in) (-1V,4V) V(out) V(R1)
+.PROBE V(out)
+.END
