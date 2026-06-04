@@ -99,7 +99,8 @@ function isTitleCard(card: SpiceLogicalCard): boolean {
   if (head === undefined) return false
   if (head.type === "directive" || head.type === "comment") return false
   if (head.type !== "identifier") return false
-  return tokens.length === 1
+  if (tokens.length === 1) return true
+  return SpiceCard.classes[head.raw[0]?.toLowerCase() ?? ""] === undefined
 }
 
 function splitSource(source: string): {

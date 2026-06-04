@@ -1,0 +1,7 @@
+PSpice ABM CHEBYSHEV voltage source
+VIN in 0 AC 1
+ELOWPASS out 0 CHEBYSHEV {V(in)} = LP 800 1.2K .1dB 50dB
+RLOAD out 0 10k
+.AC DEC 20 10 100k
+.PROBE V(out)
+.END

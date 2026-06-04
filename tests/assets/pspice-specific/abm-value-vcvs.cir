@@ -1,0 +1,7 @@
+PSpice ABM VALUE voltage source
+VIN in 0 DC 1
+ESQROOT out 0 VALUE = {5V*SQRT(V(in))}
+RLOAD out 0 10k
+.OP
+.PROBE V(out)
+.END

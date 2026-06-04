@@ -8,6 +8,11 @@ export { ElementCard } from "./ElementCard"
 export { IndependentSource } from "./IndependentSource"
 export { Inductor } from "./Inductor"
 export { Mosfet } from "./Mosfet"
+export {
+  PspiceAbmCurrentSource,
+  PspiceAbmVoltageSource,
+  type PspiceAbmForm,
+} from "./PspiceAbmSource"
 export { Resistor } from "./Resistor"
 export { SubcktInstance } from "./SubcktInstance"
 export { UnknownElementCard } from "./UnknownElementCard"

@@ -1,5 +1,6 @@
 import {
   AnalysisCommand,
+  assertPspiceTarget,
   type SpiceNodeInit,
   type SpiceSerializeOptions,
 } from "../ast"
@@ -16,6 +17,7 @@ export class Tran extends AnalysisCommand {
   start?: SpiceValue
   maxStep?: SpiceValue
   uic?: boolean
+  pspiceOp: boolean
 
   constructor(
     init: SpiceNodeInit & {
@@ -24,6 +26,7 @@ export class Tran extends AnalysisCommand {
       start?: SpiceValueInput
       maxStep?: SpiceValueInput
       uic?: boolean
+      pspiceOp?: boolean
     },
   ) {
     super(init)
@@ -34,6 +37,7 @@ export class Tran extends AnalysisCommand {
     this.maxStep =
       init.maxStep === undefined ? undefined : normalizeValue(init.maxStep)
     this.uic = init.uic
+    this.pspiceOp = init.pspiceOp ?? false
   }
 
   static fromSpiceTokens(card: SpiceLogicalCard): Tran {
@@ -44,6 +48,10 @@ export class Tran extends AnalysisCommand {
       start: tokens.arg(2),
       maxStep: tokens.arg(3),
       uic: tokens.hasKeyword("uic"),
+      pspiceOp: tokens.originalSource
+        .trimStart()
+        .toLowerCase()
+        .startsWith(".tran/op"),
       originalSource: tokens.originalSource,
     })
   }
@@ -53,6 +61,7 @@ export class Tran extends AnalysisCommand {
   }
 
   toSource(options?: SpiceSerializeOptions): string {
+    if (this.pspiceOp) assertPspiceTarget(options, ".TRAN/OP")
     if (options?.format !== "pretty" && this.originalSource !== undefined)
       return this.originalSource
     return [

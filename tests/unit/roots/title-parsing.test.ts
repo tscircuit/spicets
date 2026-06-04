@@ -7,3 +7,15 @@ test("parses title separately from cards", () => {
   expect(netlist.title).toBe("amplifier")
   expect(netlist.cards[0]).toBeInstanceOf(Resistor)
 })
+
+test("parses titles with spaces and uppercase words", () => {
+  const netlist = parseSpiceNetlist(
+    "PSpice ABM VALUE voltage source\nR1 in out 10k\n.end\n",
+  )
+
+  expect(netlist.title).toBe("PSpice ABM VALUE voltage source")
+  expect(netlist.cards[0]).toBeInstanceOf(Resistor)
+  expect(netlist.getString()).toBe(
+    "PSpice ABM VALUE voltage source\nR1 in out 10k\n.end\n",
+  )
+})
