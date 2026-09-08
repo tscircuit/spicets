@@ -73,6 +73,7 @@ export abstract class IndependentSource extends ElementCard {
       parts.push("AC")
       if (this.ac.magnitude !== undefined)
         parts.push(this.ac.magnitude.getString())
+      else if (this.ac.phase !== undefined) parts.push("1")
       if (this.ac.phase !== undefined) parts.push(this.ac.phase.getString())
     }
     if (this.transient !== undefined) parts.push(this.transient.toSource())

@@ -68,7 +68,7 @@ export class Tran extends AnalysisCommand {
       this.command,
       this.step?.getString(),
       this.stop.getString(),
-      this.start?.getString(),
+      this.start?.getString() ?? (this.maxStep === undefined ? undefined : "0"),
       this.maxStep?.getString(),
       this.uic ? "UIC" : undefined,
     ]
