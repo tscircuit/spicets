@@ -9,6 +9,7 @@ import {
   normalizeValue,
 } from "../values"
 import { ElementCard } from "./ElementCard"
+import { readPassiveValue } from "./read-passive-value"
 
 export class Capacitor extends ElementCard {
   static spiceTokenKeys = ["C"]
@@ -33,12 +34,13 @@ export class Capacitor extends ElementCard {
 
   static fromSpiceTokens(card: SpiceLogicalCard): Capacitor {
     const tokens = SpiceTokenCard.from(card)
+    const { value, paramsStart } = readPassiveValue(card)
     return new Capacitor({
       name: tokens.head(),
       nodes: [tokens.arg(0) ?? "", tokens.arg(1) ?? ""],
-      capacitance: tokens.arg(2) ?? "",
-      ic: tokens.paramAfter(3, "ic"),
-      params: tokens.paramsAfterExcept(3, ["ic"]),
+      capacitance: value,
+      ic: tokens.paramAfter(paramsStart, "ic"),
+      params: tokens.paramsAfterExcept(paramsStart, ["ic"]),
       originalSource: tokens.originalSource,
     })
   }
