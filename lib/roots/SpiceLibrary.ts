@@ -40,6 +40,7 @@ export class SpiceLibrary extends SpiceNode {
   }
 
   toSource(options?: SpiceSerializeOptions): string {
+    options = { ...options, dialect: options?.dialect ?? this.dialect }
     const source = [
       ...this.cards.map((card) => card.toSource(options)),
       ...this.sections.map((section) => section.toSource(options)),
