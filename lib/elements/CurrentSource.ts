@@ -18,6 +18,7 @@ export class CurrentSource extends IndependentSource {
       nodes: [tokens.arg(0) ?? "", tokens.arg(1) ?? ""],
       dc: sourceValues.dc,
       ac: sourceValues.ac,
+      transient: sourceValues.transient,
       originalSource: tokens.originalSource,
     })
   }
