@@ -23,10 +23,24 @@ export class SubcktInstance extends ElementCard {
 
   static fromSpiceTokens(card: SpiceLogicalCard): SubcktInstance {
     const tokens = SpiceTokenCard.from(card)
+    const args = tokens.args()
+    const markerIndex = tokens.keywordIndex("params:")
+    const assignmentIndex = args.indexOf("=")
+    const parameterStart =
+      markerIndex !== -1
+        ? markerIndex
+        : assignmentIndex !== -1
+          ? assignmentIndex - 1
+          : args.length
+    const subcktIndex = parameterStart - 1
     return new SubcktInstance({
       name: tokens.head(),
-      nodes: tokens.argsUntilLast(),
-      subckt: tokens.lastArg() ?? "",
+      nodes: args.slice(0, Math.max(0, subcktIndex)),
+      subckt: args[subcktIndex] ?? "",
+      params:
+        markerIndex !== -1
+          ? tokens.paramsAfterKeyword("params:")
+          : tokens.paramsAfter(parameterStart),
       originalSource: tokens.originalSource,
     })
   }
