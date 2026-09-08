@@ -5,6 +5,7 @@ import {
 } from "../ast"
 import type { SpiceLogicalCard } from "../tokens"
 import { SpiceTokenCard } from "../tokens/fromTokens"
+import { readOutputExpressions } from "./read-output-expressions"
 
 export class Probe extends DotCommand {
   static spiceTokenKeys = [".probe"]
@@ -19,7 +20,9 @@ export class Probe extends DotCommand {
 
   static fromSpiceTokens(card: SpiceLogicalCard): Probe {
     const tokens = SpiceTokenCard.from(card)
-    return new Probe(tokens.args(), { originalSource: tokens.originalSource })
+    return new Probe(readOutputExpressions(card), {
+      originalSource: tokens.originalSource,
+    })
   }
 
   getChildren(): [] {
