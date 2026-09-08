@@ -42,11 +42,17 @@ export class Dc extends AnalysisCommand {
 
   static fromSpiceTokens(card: SpiceLogicalCard): Dc {
     const tokens = SpiceTokenCard.from(card)
+    const sweeps: DcSweepInput[] = []
+    for (let index = 0; index < Math.max(1, tokens.args().length); index += 4) {
+      sweeps.push({
+        source: tokens.arg(index) ?? "",
+        start: tokens.arg(index + 1) ?? "",
+        stop: tokens.arg(index + 2) ?? "",
+        step: tokens.arg(index + 3) ?? "",
+      })
+    }
     return new Dc({
-      source: tokens.arg(0) ?? "",
-      start: tokens.arg(1) ?? "",
-      stop: tokens.arg(2) ?? "",
-      step: tokens.arg(3) ?? "",
+      sweeps,
       originalSource: tokens.originalSource,
     })
   }
