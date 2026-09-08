@@ -32,7 +32,7 @@ export class Capacitor extends ElementCard {
   }
 
   static fromSpiceTokens(card: SpiceLogicalCard): Capacitor {
-    const tokens = SpiceTokenCard.from(card)
+    const tokens = SpiceTokenCard.from(card, 2)
     return new Capacitor({
       name: tokens.head(),
       nodes: [tokens.arg(0) ?? "", tokens.arg(1) ?? ""],

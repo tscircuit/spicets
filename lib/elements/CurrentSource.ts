@@ -11,7 +11,7 @@ export class CurrentSource extends IndependentSource {
   readonly type = "current_source" as const
 
   static fromSpiceTokens(card: SpiceLogicalCard): CurrentSource {
-    const tokens = SpiceTokenCard.from(card)
+    const tokens = SpiceTokenCard.from(card, 2)
     const sourceValues = parseIndependentSourceValues(tokens)
     return new CurrentSource({
       name: tokens.head(),

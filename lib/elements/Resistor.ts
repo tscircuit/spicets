@@ -33,7 +33,7 @@ export class Resistor extends ElementCard {
   }
 
   static fromSpiceTokens(card: SpiceLogicalCard): Resistor {
-    const tokens = SpiceTokenCard.from(card)
+    const tokens = SpiceTokenCard.from(card, 2)
     return new Resistor({
       name: tokens.head(),
       nodes: [tokens.arg(0) ?? "", tokens.arg(1) ?? ""],

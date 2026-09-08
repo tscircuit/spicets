@@ -11,7 +11,7 @@ export class VoltageSource extends IndependentSource {
   readonly type = "voltage_source" as const
 
   static fromSpiceTokens(card: SpiceLogicalCard): VoltageSource {
-    const tokens = SpiceTokenCard.from(card)
+    const tokens = SpiceTokenCard.from(card, 2)
     const sourceValues = parseIndependentSourceValues(tokens)
     return new VoltageSource({
       name: tokens.head(),

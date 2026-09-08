@@ -32,7 +32,7 @@ export class Bjt extends ElementCard {
   }
 
   static fromSpiceTokens(card: SpiceLogicalCard): Bjt {
-    const tokens = SpiceTokenCard.from(card)
+    const tokens = SpiceTokenCard.from(card, 4)
     const hasSubstrate = tokens.args().length > 4
     const nodes: [string, string, string, string?] = hasSubstrate
       ? [

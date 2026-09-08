@@ -28,10 +28,11 @@ export class Vcvs extends ElementCard {
   }
 
   static fromSpiceTokens(card: SpiceLogicalCard): Vcvs {
-    const tokens = SpiceTokenCard.from(card)
+    let tokens = SpiceTokenCard.from(card, 2)
     if (isPspiceAbmForm(tokens.arg(2))) {
       return parsePspiceAbmVoltageSource(card) as unknown as Vcvs
     }
+    tokens = SpiceTokenCard.from(card, 4)
     return new Vcvs({
       name: tokens.head(),
       output: [tokens.arg(0) ?? "", tokens.arg(1) ?? ""],

@@ -22,13 +22,40 @@ export class SpiceTokenCard {
   readonly tokens: SpiceToken[]
   readonly originalSource: string
 
-  private constructor(private readonly card: SpiceLogicalCard) {
-    this.tokens = significantTokens(card.tokens)
+  private constructor(
+    private readonly card: SpiceLogicalCard,
+    nodeCount = 0,
+  ) {
+    const tokens = significantTokens(card.tokens)
+    this.tokens = []
+    let field = -1
+    for (const token of tokens) {
+      const previous = this.tokens.at(-1)
+      const adjacent = previous?.range.end.offset === token.range.start.offset
+      if (!adjacent) field++
+      if (
+        adjacent &&
+        field <= nodeCount &&
+        nodeCount > 0 &&
+        previous.type !== "comment" &&
+        token.type !== "comment"
+      ) {
+        const raw = previous.raw + token.raw
+        this.tokens[this.tokens.length - 1] = {
+          type: "identifier",
+          raw,
+          value: raw,
+          range: { start: previous.range.start, end: token.range.end },
+        }
+      } else {
+        this.tokens.push(token)
+      }
+    }
     this.originalSource = card.originalSource
   }
 
-  static from(card: SpiceLogicalCard): SpiceTokenCard {
-    return new SpiceTokenCard(card)
+  static from(card: SpiceLogicalCard, nodeCount = 0): SpiceTokenCard {
+    return new SpiceTokenCard(card, nodeCount)
   }
 
   head(): string {
