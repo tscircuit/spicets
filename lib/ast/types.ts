@@ -25,6 +25,7 @@ export interface SpiceSerializeOptions {
   continuation?: "plus" | "backslash"
   end?: "auto" | "always" | "never"
   numericFormat?: "preserve" | "normalized"
+  lineEnding?: "\n" | "\r\n" | "\r"
 }
 
 export interface SpiceNodeInit {

@@ -70,6 +70,7 @@ export class Subckt extends DotCommand {
     if (options?.format !== "pretty" && this.originalSource !== undefined)
       return this.originalSource
     const params = this.params.getString(options)
+    const lineEnding = options?.lineEnding ?? "\n"
     return [
       [
         this.command,
@@ -82,7 +83,7 @@ export class Subckt extends DotCommand {
         .join(" "),
       ...this.cards.map((card) => card.toSource(options)),
       [".ends", this.endsName ?? this.name].join(" "),
-    ].join("\n")
+    ].join(lineEnding)
   }
 }
 DotCommand.register(Subckt)
