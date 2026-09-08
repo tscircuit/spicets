@@ -263,7 +263,13 @@ export function tokenizeSpice(
     if (startsNumber(offset)) {
       const raw = readNumberRaw()
       atLineStart = false
-      if (pushNumberToken(raw, rangeFrom(start))) continue
+      const range = rangeFrom(start)
+      if (!pushNumberToken(raw, range)) {
+        const error = { message: "Invalid number", raw, range }
+        errors.push(error)
+        pushToken({ type: "error", raw, message: error.message, range })
+      }
+      continue
     }
 
     if (operatorChars.has(char)) {
