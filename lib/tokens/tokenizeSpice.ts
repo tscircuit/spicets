@@ -46,7 +46,7 @@ export function tokenizeSpice(
     for (let i = 0; i < raw.length; i += 1) {
       const char = raw[i]
       offset += 1
-      if (char === "\n") {
+      if (char === "\n" || (char === "\r" && source[offset] !== "\n")) {
         line += 1
         column = 1
         atLineStart = true
