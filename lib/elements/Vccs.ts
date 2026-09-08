@@ -28,10 +28,11 @@ export class Vccs extends ElementCard {
   }
 
   static fromSpiceTokens(card: SpiceLogicalCard): Vccs {
-    const tokens = SpiceTokenCard.from(card)
+    let tokens = SpiceTokenCard.from(card, 2)
     if (isPspiceAbmForm(tokens.arg(2))) {
       return parsePspiceAbmCurrentSource(card) as unknown as Vccs
     }
+    tokens = SpiceTokenCard.from(card, 4)
     return new Vccs({
       name: tokens.head(),
       output: [tokens.arg(0) ?? "", tokens.arg(1) ?? ""],

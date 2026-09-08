@@ -32,7 +32,7 @@ export class Inductor extends ElementCard {
   }
 
   static fromSpiceTokens(card: SpiceLogicalCard): Inductor {
-    const tokens = SpiceTokenCard.from(card)
+    const tokens = SpiceTokenCard.from(card, 2)
     return new Inductor({
       name: tokens.head(),
       nodes: [tokens.arg(0) ?? "", tokens.arg(1) ?? ""],

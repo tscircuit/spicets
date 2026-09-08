@@ -29,7 +29,7 @@ export class Cccs extends ElementCard {
   }
 
   static fromSpiceTokens(card: SpiceLogicalCard): Cccs {
-    const tokens = SpiceTokenCard.from(card)
+    const tokens = SpiceTokenCard.from(card, 2)
     return new Cccs({
       name: tokens.head(),
       output: [tokens.arg(0) ?? "", tokens.arg(1) ?? ""],

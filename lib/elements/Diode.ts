@@ -22,7 +22,7 @@ export class Diode extends ElementCard {
   }
 
   static fromSpiceTokens(card: SpiceLogicalCard): Diode {
-    const tokens = SpiceTokenCard.from(card)
+    const tokens = SpiceTokenCard.from(card, 2)
     return new Diode({
       name: tokens.head(),
       nodes: [tokens.arg(0) ?? "", tokens.arg(1) ?? ""],

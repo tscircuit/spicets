@@ -126,11 +126,11 @@ export class PspiceAbmCurrentSource extends ElementCard {
 export function parsePspiceAbmVoltageSource(
   card: SpiceLogicalCard,
 ): PspiceAbmVoltageSource {
-  return PspiceAbmVoltageSource.fromTokenCard(SpiceTokenCard.from(card))
+  return PspiceAbmVoltageSource.fromTokenCard(SpiceTokenCard.from(card, 2))
 }
 
 export function parsePspiceAbmCurrentSource(
   card: SpiceLogicalCard,
 ): PspiceAbmCurrentSource {
-  return PspiceAbmCurrentSource.fromTokenCard(SpiceTokenCard.from(card))
+  return PspiceAbmCurrentSource.fromTokenCard(SpiceTokenCard.from(card, 2))
 }

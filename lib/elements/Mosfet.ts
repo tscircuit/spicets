@@ -27,7 +27,7 @@ export class Mosfet extends ElementCard {
   }
 
   static fromSpiceTokens(card: SpiceLogicalCard): Mosfet {
-    const tokens = SpiceTokenCard.from(card)
+    const tokens = SpiceTokenCard.from(card, 4)
     return new Mosfet({
       name: tokens.head(),
       nodes: [
