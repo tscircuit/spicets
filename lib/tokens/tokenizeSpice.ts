@@ -134,13 +134,18 @@ export function tokenizeSpice(
     if (!numberMatch) return false
     const unitSuffix = numberMatch[1]
     const suffix = unitSuffix?.toLowerCase()
+    // SPICE ignores unit letters after the leading scale factor. Recognize
+    // the multi-letter factors before treating M as milli.
+    const scale = suffix?.startsWith("meg")
+      ? 1e6
+      : suffix?.startsWith("mil")
+        ? 25.4e-6
+        : (suffixScale[suffix?.[0] ?? ""] ?? 1)
     const numericRaw =
       unitSuffix === undefined ? raw : raw.slice(0, -unitSuffix.length)
     const baseValue = Number(numericRaw)
     const value =
-      normalizeNumbers && !Number.isNaN(baseValue)
-        ? baseValue * (suffix === undefined ? 1 : (suffixScale[suffix] ?? 1))
-        : null
+      normalizeNumbers && !Number.isNaN(baseValue) ? baseValue * scale : null
     pushToken({
       type: "number",
       raw,
