@@ -120,18 +120,27 @@ export function groupSpiceBlocks(
     if (head === ".subckt") {
       const childCards: SpiceLogicalCard[] = []
       let endCard: SpiceLogicalCard | undefined
+      let depth = 1
       let originalSource = card.originalSource
       for (i += 1; i < cards.length; i += 1) {
         const next = cards[i]
         if (next === undefined) continue
         originalSource = `${originalSource}${next.leadingNewlineRaw ?? "\n"}${next.originalSource}`
-        if (cardHead(next) === ".ends") {
+        const nextHead = cardHead(next)
+        if (nextHead === ".subckt") depth += 1
+        if (nextHead === ".ends") depth -= 1
+        if (depth === 0) {
           endCard = next
           break
         }
         childCards.push(next)
       }
-      grouped.push({ ...card, childCards, endCard, originalSource })
+      grouped.push({
+        ...card,
+        childCards: groupSpiceBlocks(childCards),
+        endCard,
+        originalSource,
+      })
       continue
     }
 
