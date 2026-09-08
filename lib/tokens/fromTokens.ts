@@ -178,14 +178,47 @@ export class SpiceTokenCard {
       if (
         equalsToken?.type === "operator" &&
         equalsToken.value === "=" &&
-        valueToken !== undefined &&
-        !isIgnorableParamToken(valueToken)
+        valueToken !== undefined
       ) {
         const name = tokenText(nameToken)
-        const value = tokenText(valueToken)
-        if (name !== undefined && value !== undefined)
+        let end = index + 2
+        let braces = 0
+        let parentheses = 0
+        while (end < this.tokens.length) {
+          const token = this.tokens[end]!
+          if (token.type === "comment") break
+          if (braces === 0 && parentheses === 0) {
+            if (token.raw === "," || token.raw === ")") break
+            if (end > index + 2 && this.tokens[end + 1]?.raw === "=") break
+          }
+          if (token.type !== "string") {
+            for (const char of token.raw) {
+              if (char === "{") braces += 1
+              else if (char === "}") braces -= 1
+              else if (char === "(") parentheses += 1
+              else if (char === ")") parentheses -= 1
+            }
+          }
+          end += 1
+        }
+        if (name !== undefined && end > index + 2) {
+          const startOffset = valueToken.range.start.offset
+          const endOffset = this.tokens[end - 1]!.range.end.offset
+          const value = this.card.tokens
+            .filter(
+              (token) =>
+                token.range.start.offset >= startOffset &&
+                token.range.end.offset <= endOffset,
+            )
+            .map((token) =>
+              token.type === "newline" || token.type === "continuation"
+                ? " "
+                : token.raw,
+            )
+            .join("")
           entries.push([name, value])
-        index += 3
+        }
+        index = end
         continue
       }
 
