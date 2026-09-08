@@ -12,6 +12,7 @@ import type { SpiceCardInput } from "./types"
 export interface SpiceNetlistInit {
   title?: string
   cards?: SpiceCardInput[]
+  trailingCards?: SpiceCardInput[]
   end?: boolean | End
   dialect?: SpiceDialect
   trailingNewline?: boolean
@@ -22,6 +23,7 @@ export class SpiceNetlist extends SpiceNode {
   readonly type = "netlist" as const
   title?: string
   cards: SpiceCardInput[]
+  trailingCards: SpiceCardInput[]
   end?: End
   dialect: SpiceDialect
   trailingNewline: boolean
@@ -31,6 +33,7 @@ export class SpiceNetlist extends SpiceNode {
     super()
     this.title = init.title
     this.cards = init.cards ?? []
+    this.trailingCards = init.trailingCards ?? []
     this.end =
       init.end instanceof End
         ? init.end
@@ -104,7 +107,11 @@ export class SpiceNetlist extends SpiceNode {
   }
 
   getChildren(): SpiceNode[] {
-    return [...this.cards, ...(this.end === undefined ? [] : [this.end])]
+    return [
+      ...this.cards,
+      ...(this.end === undefined ? [] : [this.end]),
+      ...this.trailingCards,
+    ]
   }
 
   override getString(options: SpiceSerializeOptions = {}): string {
@@ -121,6 +128,7 @@ export class SpiceNetlist extends SpiceNode {
         : endMode === "always"
           ? (this.end ?? new End()).toSource(options)
           : this.end?.toSource(options),
+      ...this.trailingCards.map((card) => card.toSource(options)),
     ].filter((line): line is string => line !== undefined)
     const source = lines.join(this.lineEnding)
     return this.trailingNewline ? `${source}${this.lineEnding}` : source
