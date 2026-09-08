@@ -5,6 +5,7 @@ import {
 } from "../ast"
 import type { SpiceLogicalCard } from "../tokens"
 import { SpiceTokenCard } from "../tokens/fromTokens"
+import { formatFilePath } from "./format-file-path"
 
 export class Lib extends DotCommand {
   static spiceTokenKeys = [".lib"]
@@ -35,7 +36,13 @@ export class Lib extends DotCommand {
   toSource(options?: SpiceSerializeOptions): string {
     if (options?.format !== "pretty" && this.originalSource !== undefined)
       return this.originalSource
-    return [this.command, this.path, this.section].filter(Boolean).join(" ")
+    return [
+      this.command,
+      this.path === undefined ? undefined : formatFilePath(this.path),
+      this.section,
+    ]
+      .filter(Boolean)
+      .join(" ")
   }
 }
 DotCommand.register(Lib)

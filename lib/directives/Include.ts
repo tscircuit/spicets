@@ -5,6 +5,7 @@ import {
 } from "../ast"
 import type { SpiceLogicalCard } from "../tokens"
 import { SpiceTokenCard } from "../tokens/fromTokens"
+import { formatFilePath } from "./format-file-path"
 
 export class Include extends DotCommand {
   static spiceTokenKeys = [".include"]
@@ -31,7 +32,7 @@ export class Include extends DotCommand {
   toSource(options?: SpiceSerializeOptions): string {
     if (options?.format !== "pretty" && this.originalSource !== undefined)
       return this.originalSource
-    return `${this.command} ${this.path}`
+    return `${this.command} ${formatFilePath(this.path)}`
   }
 }
 DotCommand.register(Include)
