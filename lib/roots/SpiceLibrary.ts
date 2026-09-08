@@ -9,6 +9,7 @@ import type { SpiceCardInput } from "./types"
 export interface SpiceLibraryInit {
   cards?: SpiceCardInput[]
   sections?: LibSection[]
+  sourceOrder?: Array<"card" | "section">
   dialect?: SpiceDialect
   trailingNewline?: boolean
   lineEnding?: "\n" | "\r\n" | "\r"
@@ -21,6 +22,7 @@ export class SpiceLibrary extends SpiceNode {
   dialect: SpiceDialect
   trailingNewline: boolean
   lineEnding: "\n" | "\r\n" | "\r"
+  private sourceOrder?: Array<"card" | "section">
 
   constructor(init: SpiceLibraryInit = {}) {
     super()
@@ -29,10 +31,25 @@ export class SpiceLibrary extends SpiceNode {
     this.dialect = init.dialect ?? "generic"
     this.trailingNewline = init.trailingNewline ?? true
     this.lineEnding = init.lineEnding ?? "\n"
+    this.sourceOrder = init.sourceOrder
   }
 
   getChildren(): SpiceNode[] {
-    return [...this.cards, ...this.sections]
+    const result: SpiceNode[] = []
+    let cardIndex = 0
+    let sectionIndex = 0
+    for (const kind of this.sourceOrder ?? []) {
+      const entry =
+        kind === "card"
+          ? this.cards[cardIndex++]
+          : this.sections[sectionIndex++]
+      if (entry !== undefined) result.push(entry)
+    }
+    return [
+      ...result,
+      ...this.cards.slice(cardIndex),
+      ...this.sections.slice(sectionIndex),
+    ]
   }
 
   override getString(options?: SpiceSerializeOptions): string {
@@ -40,10 +57,9 @@ export class SpiceLibrary extends SpiceNode {
   }
 
   toSource(options?: SpiceSerializeOptions): string {
-    const source = [
-      ...this.cards.map((card) => card.toSource(options)),
-      ...this.sections.map((section) => section.toSource(options)),
-    ].join(this.lineEnding)
+    const source = this.getChildren()
+      .map((entry) => entry.toSource(options))
+      .join(this.lineEnding)
     return this.trailingNewline ? `${source}${this.lineEnding}` : source
   }
 }

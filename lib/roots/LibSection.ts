@@ -5,11 +5,23 @@ export class LibSection extends SpiceNode {
   readonly type = "lib_section" as const
   name: string
   cards: SpiceCardInput[]
+  lineEnding: "\n" | "\r\n" | "\r"
+  private originalHeader?: string
+  private originalEnd?: string
 
-  constructor(init: { name: string; cards?: SpiceCardInput[] }) {
+  constructor(init: {
+    name: string
+    cards?: SpiceCardInput[]
+    lineEnding?: "\n" | "\r\n" | "\r"
+    originalHeader?: string
+    originalEnd?: string
+  }) {
     super()
     this.name = init.name
     this.cards = init.cards ?? []
+    this.lineEnding = init.lineEnding ?? "\n"
+    this.originalHeader = init.originalHeader
+    this.originalEnd = init.originalEnd
   }
 
   getChildren(): SpiceNode[] {
@@ -18,9 +30,13 @@ export class LibSection extends SpiceNode {
 
   toSource(options?: SpiceSerializeOptions): string {
     return [
-      `.lib ${this.name}`,
+      options?.format !== "pretty" && this.originalHeader !== undefined
+        ? this.originalHeader
+        : `.lib ${this.name}`,
       ...this.cards.map((card) => card.toSource(options)),
-      ".endl",
-    ].join("\n")
+      options?.format !== "pretty" && this.originalEnd !== undefined
+        ? this.originalEnd
+        : ".endl",
+    ].join(this.lineEnding)
   }
 }
