@@ -24,12 +24,14 @@ export function parseSpiceNetlist(
   const bodyCards = title === undefined ? logicalCards : logicalCards.slice(1)
   const cards = parseLogicalCards(bodyCards, options)
   const endIndex = cards.findIndex((card) => card instanceof End)
+  const trailingCards = endIndex === -1 ? [] : cards.splice(endIndex + 1)
   const end =
     endIndex === -1 ? undefined : (cards.splice(endIndex, 1)[0] as End)
 
   return new SpiceNetlist({
     title,
     cards,
+    trailingCards,
     end: end ?? false,
     dialect: options.dialect,
     trailingNewline: split.trailingNewline,

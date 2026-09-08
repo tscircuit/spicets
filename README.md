@@ -161,6 +161,9 @@ const clock = new VoltageSource({
   `fromSpiceTokens()` static method, mirroring the `SxClass.register(...)`
   pattern in `kicadts`.
 - `SpiceNetlist.cards` is the ordered source of truth.
+- `SpiceNetlist.trailingCards` preserves material after the first `.end`.
+  It is serialized after the terminator and excluded from active-card getters;
+  `getChildren()` includes it in source order.
 - Typed getters expose `elements`, `directives`, `subckts`, `models`, and
   `analyses`.
 - Every card class extends `SpiceCard`; element cards extend `ElementCard`; dot
