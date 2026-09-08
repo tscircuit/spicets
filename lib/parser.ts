@@ -1,7 +1,13 @@
 import "./registerAll"
 import { SpiceCard, type SpiceParseOptions } from "./ast"
 import { End } from "./directives"
-import { SpiceLibrary, SpiceNetlist, type SpiceCardInput } from "./roots"
+import {
+  LibSection,
+  SpiceLibrary,
+  SpiceNetlist,
+  type SpiceCardInput,
+} from "./roots"
+import { SpiceTokenCard } from "./tokens/fromTokens"
 import {
   groupSpiceBlocks,
   significantTokens,
@@ -42,8 +48,52 @@ export function parseSpiceLibrary(
   options: SpiceParseOptions = {},
 ): SpiceLibrary {
   const split = splitSource(source)
+  const logicalCards = tokenizeToLogicalCards(source)
+  const cards: SpiceCardInput[] = []
+  const sections: LibSection[] = []
+  const sourceOrder: Array<"card" | "section"> = []
+  for (let index = 0; index < logicalCards.length; index += 1) {
+    const card = logicalCards[index]!
+    const tokens = SpiceTokenCard.from(card)
+    const contentTokens = tokens.tokens.filter(
+      (token) => token.type !== "comment",
+    )
+    if (
+      tokens.headRaw().toLowerCase() === ".lib" &&
+      contentTokens.length === 2
+    ) {
+      let endIndex = index + 1
+      while (
+        endIndex < logicalCards.length &&
+        SpiceTokenCard.from(logicalCards[endIndex]!).headRaw().toLowerCase() !==
+          ".endl"
+      )
+        endIndex += 1
+      if (endIndex < logicalCards.length) {
+        sections.push(
+          new LibSection({
+            name: tokens.arg(0) ?? "",
+            cards: parseLogicalCards(
+              logicalCards.slice(index + 1, endIndex),
+              options,
+            ),
+            lineEnding: split.lineEnding,
+            originalHeader: card.originalSource,
+            originalEnd: logicalCards[endIndex]!.originalSource,
+          }),
+        )
+        sourceOrder.push("section")
+        index = endIndex
+        continue
+      }
+    }
+    cards.push(...parseLogicalCards([card], options))
+    sourceOrder.push("card")
+  }
   return new SpiceLibrary({
-    cards: parseSpiceCards(source, options),
+    cards,
+    sections,
+    sourceOrder,
     dialect: options.dialect,
     trailingNewline: split.trailingNewline,
     lineEnding: split.lineEnding,
