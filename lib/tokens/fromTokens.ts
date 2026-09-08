@@ -124,6 +124,61 @@ export class SpiceTokenCard {
     return this.argsAfter(startIndex).join(" ")
   }
 
+  argToken(index: number): SpiceToken | undefined {
+    return this.tokens[index + 1]
+  }
+
+  firstNamedParamTokenIndex(): number {
+    for (
+      let tokenIndex = 1;
+      tokenIndex < this.tokens.length - 1;
+      tokenIndex += 1
+    ) {
+      const next = this.tokens[tokenIndex + 1]
+      if (next?.type === "operator" && next.value === "=") return tokenIndex
+    }
+    return this.tokens.length
+  }
+
+  positionalValueTokens(): SpiceToken[] {
+    return this.tokens
+      .slice(1, this.firstNamedParamTokenIndex())
+      .filter(
+        (token) => token.type !== "punctuation" && token.type !== "operator",
+      )
+  }
+
+  optionItems(): Array<{ name: string; value?: string }> {
+    const items: Array<{ name: string; value?: string }> = []
+    let index = 1
+    while (index < this.tokens.length) {
+      const nameToken = this.tokens[index]
+      if (nameToken === undefined) break
+      if (isIgnorableParamToken(nameToken)) {
+        index += 1
+        continue
+      }
+      const equalsToken = this.tokens[index + 1]
+      const valueToken = this.tokens[index + 2]
+      const name = tokenText(nameToken)
+      if (
+        equalsToken?.type === "operator" &&
+        equalsToken.value === "=" &&
+        valueToken !== undefined &&
+        !isIgnorableParamToken(valueToken)
+      ) {
+        const value = tokenText(valueToken)
+        if (name !== undefined && value !== undefined)
+          items.push({ name, value })
+        index += 3
+        continue
+      }
+      if (name !== undefined) items.push({ name })
+      index += 1
+    }
+    return items
+  }
+
   private findKeyword(
     keyword: string,
     startArgIndex = 0,

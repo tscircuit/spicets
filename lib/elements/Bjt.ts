@@ -33,21 +33,21 @@ export class Bjt extends ElementCard {
 
   static fromSpiceTokens(card: SpiceLogicalCard): Bjt {
     const tokens = SpiceTokenCard.from(card)
-    const hasSubstrate = tokens.args().length > 4
-    const nodes: [string, string, string, string?] = hasSubstrate
-      ? [
-          tokens.arg(0) ?? "",
-          tokens.arg(1) ?? "",
-          tokens.arg(2) ?? "",
-          tokens.arg(3) ?? "",
-        ]
-      : [tokens.arg(0) ?? "", tokens.arg(1) ?? "", tokens.arg(2) ?? ""]
-    const modelIndex = hasSubstrate ? 4 : 3
+    const positional = tokens.positionalValueTokens()
+    const modelToken = positional.at(-1)
+    const nodeTokens = positional.slice(0, -1)
+    const nodes = nodeTokens.map((token) => token.raw) as [
+      string,
+      string,
+      string,
+      string?,
+    ]
+    const paramStartArgIndex = positional.length
     return new Bjt({
       name: tokens.head(),
       nodes,
-      model: tokens.arg(modelIndex) ?? "",
-      params: tokens.paramsAfter(modelIndex + 1),
+      model: modelToken?.raw ?? "",
+      params: tokens.paramsAfter(paramStartArgIndex),
       originalSource: tokens.originalSource,
     })
   }

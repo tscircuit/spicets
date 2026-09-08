@@ -6,6 +6,11 @@ import {
 import type { SpiceLogicalCard } from "../tokens"
 import { SpiceTokenCard } from "../tokens/fromTokens"
 
+function quoteSpicePath(path: string): string {
+  if (/[\s,]/.test(path)) return `"${path}"`
+  return path
+}
+
 export class Include extends DotCommand {
   static spiceTokenKeys = [".include"]
   readonly type = "include" as const
@@ -31,7 +36,7 @@ export class Include extends DotCommand {
   toSource(options?: SpiceSerializeOptions): string {
     if (options?.format !== "pretty" && this.originalSource !== undefined)
       return this.originalSource
-    return `${this.command} ${this.path}`
+    return `${this.command} ${quoteSpicePath(this.path)}`
   }
 }
 DotCommand.register(Include)
