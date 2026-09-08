@@ -112,6 +112,7 @@ export class SpiceNetlist extends SpiceNode {
   }
 
   toSource(options: SpiceSerializeOptions = {}): string {
+    options = { ...options, dialect: options.dialect ?? this.dialect }
     const endMode = options.end ?? "auto"
     const lines = [
       this.title,
