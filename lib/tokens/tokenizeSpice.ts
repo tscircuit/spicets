@@ -31,6 +31,7 @@ export function tokenizeSpice(
   const preserveComments = options.preserveComments ?? true
   const normalizeNumbers = options.normalizeNumbers ?? true
   const tokens: SpiceToken[] = []
+  let previousToken: SpiceToken | undefined
   const errors: SpiceTokenizerError[] = []
   let offset = 0
   let line = 1
@@ -56,6 +57,7 @@ export function tokenizeSpice(
     }
   }
   const pushToken = (token: SpiceToken) => {
+    previousToken = token
     if (token.type === "whitespace" && !preserveWhitespace) return
     if (token.type === "comment" && !preserveComments) return
     tokens.push(token)
@@ -76,7 +78,7 @@ export function tokenizeSpice(
     )
   }
   const isSignedNumberStart = () => {
-    const previous = tokens.at(-1)
+    const previous = previousToken
     return (
       previous === undefined ||
       previous.type === "whitespace" ||
