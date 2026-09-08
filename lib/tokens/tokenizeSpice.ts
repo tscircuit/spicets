@@ -264,6 +264,11 @@ export function tokenizeSpice(
       const raw = readNumberRaw()
       atLineStart = false
       if (pushNumberToken(raw, rangeFrom(start))) continue
+      const range = rangeFrom(start)
+      const error = { message: "Invalid numeric literal", raw, range }
+      errors.push(error)
+      pushToken({ type: "error", raw, message: error.message, range })
+      continue
     }
 
     if (operatorChars.has(char)) {
