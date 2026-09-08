@@ -42,7 +42,8 @@ export class Comment extends SpiceTrivia {
     if (options?.format !== "pretty" && this.originalSource !== undefined) {
       return this.originalSource
     }
-    return `${this.marker} ${this.text}`.trimEnd()
+    const text = this.text.replace(/(\r\n|\r|\n)/g, `$1${this.marker} `)
+    return `${this.marker} ${text}`.trimEnd()
   }
 }
 SpiceCard.register(Comment)
