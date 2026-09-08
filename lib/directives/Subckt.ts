@@ -44,12 +44,21 @@ export class Subckt extends DotCommand {
 
   static fromSpiceTokens(card: SpiceLogicalCard): Subckt {
     const tokens = SpiceTokenCard.from(card)
+    const args = tokens.args()
+    const assignmentIndex = args.indexOf("=")
+    const parameterStart =
+      assignmentIndex === -1 ? args.length : assignmentIndex - 1
+    const hasParameterMarker = tokens.hasKeyword("params:")
     const endTokens =
       card.endCard === undefined ? undefined : SpiceTokenCard.from(card.endCard)
     return new Subckt({
       name: tokens.arg(0) ?? "",
-      pins: tokens.argsBeforeKeyword("params:", 1),
-      params: tokens.paramsAfterKeyword("params:"),
+      pins: hasParameterMarker
+        ? tokens.argsBeforeKeyword("params:", 1)
+        : args.slice(1, parameterStart),
+      params: hasParameterMarker
+        ? tokens.paramsAfterKeyword("params:")
+        : tokens.paramsAfter(parameterStart),
       cards: card.childCards?.map(
         (childCard) => SpiceCard.parseSpiceTokens(childCard) as SpiceCardInput,
       ),
