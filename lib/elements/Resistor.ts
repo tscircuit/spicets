@@ -9,6 +9,7 @@ import {
   normalizeValue,
 } from "../values"
 import { ElementCard } from "./ElementCard"
+import { readPassiveValue } from "./read-passive-value"
 
 export class Resistor extends ElementCard {
   static spiceTokenKeys = ["R"]
@@ -34,11 +35,12 @@ export class Resistor extends ElementCard {
 
   static fromSpiceTokens(card: SpiceLogicalCard): Resistor {
     const tokens = SpiceTokenCard.from(card)
+    const { value, paramsStart } = readPassiveValue(card)
     return new Resistor({
       name: tokens.head(),
       nodes: [tokens.arg(0) ?? "", tokens.arg(1) ?? ""],
-      resistance: tokens.arg(2) ?? "",
-      params: tokens.paramsAfter(3),
+      resistance: value,
+      params: tokens.paramsAfter(paramsStart),
       originalSource: tokens.originalSource,
     })
   }
