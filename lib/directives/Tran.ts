@@ -42,12 +42,19 @@ export class Tran extends AnalysisCommand {
 
   static fromSpiceTokens(card: SpiceLogicalCard): Tran {
     const tokens = SpiceTokenCard.from(card)
+    const args = tokens.tokens
+      .slice(1)
+      .flatMap((token, index) =>
+        token.type === "comment" ? [] : [tokens.arg(index) ?? token.raw],
+      )
+    const uicIndex = args.findIndex((arg) => arg.toLowerCase() === "uic")
+    const timing = uicIndex === -1 ? args : args.slice(0, uicIndex)
     return new Tran({
-      step: tokens.arg(0),
-      stop: tokens.arg(1) ?? "",
-      start: tokens.arg(2),
-      maxStep: tokens.arg(3),
-      uic: tokens.hasKeyword("uic"),
+      step: timing[0],
+      stop: timing[1] ?? "",
+      start: timing[2],
+      maxStep: timing[3],
+      uic: uicIndex !== -1,
       pspiceOp: tokens.originalSource
         .trimStart()
         .toLowerCase()
