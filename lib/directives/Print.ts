@@ -6,6 +6,35 @@ import {
 import type { SpiceLogicalCard } from "../tokens"
 import { SpiceTokenCard } from "../tokens/fromTokens"
 
+function splitPrintExpressions(source: string): string[] {
+  const expressions: string[] = []
+  let start = 0
+  let depth = 0
+  let quote = ""
+  for (let index = 0; index < source.length; index++) {
+    const character = source.charAt(index)
+    if (quote) {
+      if (character === "\\") index++
+      else if (character === quote) quote = ""
+      continue
+    }
+    if (character === "'" || character === '"') {
+      quote = character
+    } else if (character === "(" || character === "{" || character === "[") {
+      depth++
+    } else if (character === ")" || character === "}" || character === "]") {
+      depth = Math.max(0, depth - 1)
+    } else if (depth === 0 && (character === "," || /\s/.test(character))) {
+      const expression = source.slice(start, index).trim()
+      if (expression) expressions.push(expression)
+      start = index + 1
+    }
+  }
+  const expression = source.slice(start).trim()
+  if (expression) expressions.push(expression)
+  return expressions
+}
+
 function parsePrintSource(source: string): {
   analysis?: string
   expressions: string[]
@@ -15,10 +44,7 @@ function parsePrintSource(source: string): {
   const expressionSource = rest.join(" ")
   return {
     analysis,
-    expressions:
-      expressionSource.length === 0
-        ? []
-        : expressionSource.split(",").map((expression) => expression.trim()),
+    expressions: splitPrintExpressions(expressionSource),
   }
 }
 
