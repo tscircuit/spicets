@@ -16,7 +16,7 @@ export class Sin extends SourceWaveform {
     phase?: SpiceValueInput
   }) {
     super()
-    this.values = [
+    const values = [
       init.offset,
       init.amplitude,
       init.frequency,
@@ -24,8 +24,9 @@ export class Sin extends SourceWaveform {
       init.damping,
       init.phase,
     ]
-      .filter((value): value is SpiceValueInput => value !== undefined)
-      .map(normalizeValue)
+    this.values = values
+      .slice(0, values.findLastIndex((value) => value !== undefined) + 1)
+      .map((value) => normalizeValue(value ?? 0))
   }
 
   toSource(): string {

@@ -17,7 +17,7 @@ export class Pulse extends SourceWaveform {
     period?: SpiceValueInput
   }) {
     super()
-    this.values = [
+    const values = [
       init.initial,
       init.pulsed,
       init.delay,
@@ -26,8 +26,9 @@ export class Pulse extends SourceWaveform {
       init.width,
       init.period,
     ]
-      .filter((value): value is SpiceValueInput => value !== undefined)
-      .map(normalizeValue)
+    this.values = values
+      .slice(0, values.findLastIndex((value) => value !== undefined) + 1)
+      .map((value) => normalizeValue(value ?? 0))
   }
 
   toSource(): string {
