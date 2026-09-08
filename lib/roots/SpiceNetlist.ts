@@ -95,12 +95,19 @@ export class SpiceNetlist extends SpiceNode {
   }
 
   renameNode(from: string, to: string): void {
-    for (const element of this.elements) element.renameNode(from, to)
-    for (const subckt of this.subckts) {
-      for (const card of subckt.cards) {
-        if (card instanceof ElementCard) card.renameNode(from, to)
+    const renameCards = (cards: SpiceCardInput[]): void => {
+      for (const card of cards) {
+        if (card instanceof ElementCard) {
+          card.renameNode(from, to)
+        } else if (card instanceof Subckt) {
+          for (const pin of card.pins) {
+            if (pin.name === from) pin.name = to
+          }
+          renameCards(card.cards)
+        }
       }
     }
+    renameCards(this.cards)
   }
 
   getChildren(): SpiceNode[] {
