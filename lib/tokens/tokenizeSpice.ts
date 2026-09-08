@@ -156,6 +156,12 @@ export function tokenizeSpice(
     const char = source[offset]!
     const next = source[offset + 1]
 
+    if (offset === 0 && char === "\uFEFF") {
+      advance(char)
+      pushToken({ type: "whitespace", raw: char, range: rangeFrom(start) })
+      continue
+    }
+
     if (char === "\r" || char === "\n") {
       const raw = char === "\r" && next === "\n" ? "\r\n" : char
       advance(raw)
