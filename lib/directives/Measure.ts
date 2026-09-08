@@ -29,10 +29,24 @@ export class Measure extends DotCommand {
 
   static fromSpiceTokens(card: SpiceLogicalCard): Measure {
     const tokens = SpiceTokenCard.from(card)
+    const expressionTokens = tokens.tokens
+      .slice(3)
+      .filter((token) => token.type !== "comment")
+    const expression = expressionTokens
+      .map((token, index) => {
+        const previous = expressionTokens[index - 1]
+        if (!previous) return token.raw
+        const gap = tokens.originalSource.slice(
+          previous.range.end.offset - card.range.start.offset,
+          token.range.start.offset - card.range.start.offset,
+        )
+        return `${/^[ \t]*$/.test(gap) ? gap : " "}${token.raw}`
+      })
+      .join("")
     return new Measure({
       analysis: tokens.arg(0),
       name: tokens.arg(1) ?? "",
-      expression: tokens.restJoined(2),
+      expression,
       originalSource: tokens.originalSource,
     })
   }
