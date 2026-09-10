@@ -69,6 +69,7 @@ export class Subckt extends DotCommand {
   toSource(options?: SpiceSerializeOptions): string {
     if (options?.format !== "pretty" && this.originalSource !== undefined)
       return this.originalSource
+    const lineEnding = options?.lineEnding ?? "\n"
     const params = this.params.getString(options)
     return [
       [
@@ -82,7 +83,7 @@ export class Subckt extends DotCommand {
         .join(" "),
       ...this.cards.map((card) => card.toSource(options)),
       [".ends", this.endsName ?? this.name].join(" "),
-    ].join("\n")
+    ].join(lineEnding)
   }
 }
 DotCommand.register(Subckt)
