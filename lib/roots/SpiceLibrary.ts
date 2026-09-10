@@ -39,11 +39,13 @@ export class SpiceLibrary extends SpiceNode {
     return this.toSource(options)
   }
 
-  toSource(options?: SpiceSerializeOptions): string {
+  toSource(options: SpiceSerializeOptions = {}): string {
+    const lineEnding = options.lineEnding ?? this.lineEnding
+    const childOptions: SpiceSerializeOptions = { ...options, lineEnding }
     const source = [
-      ...this.cards.map((card) => card.toSource(options)),
-      ...this.sections.map((section) => section.toSource(options)),
-    ].join(this.lineEnding)
-    return this.trailingNewline ? `${source}${this.lineEnding}` : source
+      ...this.cards.map((card) => card.toSource(childOptions)),
+      ...this.sections.map((section) => section.toSource(childOptions)),
+    ].join(lineEnding)
+    return this.trailingNewline ? `${source}${lineEnding}` : source
   }
 }
