@@ -23,7 +23,10 @@ export class SpiceTokenCard {
   readonly originalSource: string
 
   private constructor(private readonly card: SpiceLogicalCard) {
-    this.tokens = significantTokens(card.tokens)
+    // Keep a comment card's head, but exclude inline comments from arguments.
+    this.tokens = significantTokens(card.tokens).filter(
+      (token, index) => index === 0 || token.type !== "comment",
+    )
     this.originalSource = card.originalSource
   }
 
