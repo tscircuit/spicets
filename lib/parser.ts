@@ -1,13 +1,18 @@
 import "./registerAll"
 import { SpiceCard, type SpiceParseOptions } from "./ast"
-import { End } from "./directives"
-import { SpiceLibrary, SpiceNetlist, type SpiceCardInput } from "./roots"
+import { End, Lib, UnknownDotCommand } from "./directives"
+import {
+  LibSection,
+  type SpiceCardInput,
+  SpiceLibrary,
+  SpiceNetlist,
+} from "./roots"
 import {
   groupSpiceBlocks,
+  type SpiceLogicalCard,
   significantTokens,
   tokenizeSpice,
   tokensToLogicalCards,
-  type SpiceLogicalCard,
 } from "./tokens"
 
 export function parseSpiceNetlist(
@@ -42,8 +47,47 @@ export function parseSpiceLibrary(
   options: SpiceParseOptions = {},
 ): SpiceLibrary {
   const split = splitSource(source)
+  const parsedCards = parseSpiceCards(source, options)
+  const cards: SpiceCardInput[] = []
+  const sections: LibSection[] = []
+
+  let i = 0
+  while (i < parsedCards.length) {
+    const card = parsedCards[i]!
+    if (
+      card instanceof Lib &&
+      card.path !== undefined &&
+      card.section === undefined
+    ) {
+      let endlIndex = -1
+      for (let j = i + 1; j < parsedCards.length; j += 1) {
+        const candidate = parsedCards[j]
+        if (
+          candidate instanceof UnknownDotCommand &&
+          candidate.command.toLowerCase() === ".endl"
+        ) {
+          endlIndex = j
+          break
+        }
+      }
+      if (endlIndex !== -1) {
+        sections.push(
+          new LibSection({
+            name: card.path,
+            cards: parsedCards.slice(i + 1, endlIndex),
+          }),
+        )
+        i = endlIndex + 1
+        continue
+      }
+    }
+    cards.push(card)
+    i += 1
+  }
+
   return new SpiceLibrary({
-    cards: parseSpiceCards(source, options),
+    cards,
+    sections,
     dialect: options.dialect,
     trailingNewline: split.trailingNewline,
     lineEnding: split.lineEnding,
