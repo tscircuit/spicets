@@ -1,11 +1,13 @@
-import type { SpiceLogicalCard, SpiceToken } from "./types"
 import { significantTokens, tokenValue } from "./logicalCards"
+import type { SpiceLogicalCard, SpiceToken } from "./types"
 
 type KeywordMatch = {
   argIndex: number
   tokenIndex: number
   tokenCount: number
 }
+
+const abmForms = new Set(["VALUE", "TABLE", "LAPLACE", "FREQ", "CHEBYSHEV"])
 
 function tokenText(token: SpiceToken | undefined): string | undefined {
   return tokenValue(token)
@@ -18,12 +20,126 @@ function isIgnorableParamToken(token: SpiceToken): boolean {
   )
 }
 
+function isContiguousNodePart(token: SpiceToken): boolean {
+  if (token.type === "punctuation" || token.type === "comment") return false
+  if (token.type === "operator" && token.value === "=") return false
+  return true
+}
+
+function readMergedGroup(
+  tokens: SpiceToken[],
+  startIndex: number,
+): { token: SpiceToken; nextIndex: number } {
+  const first = tokens[startIndex]!
+  if (!isContiguousNodePart(first)) {
+    return { token: first, nextIndex: startIndex + 1 }
+  }
+  const group: SpiceToken[] = [first]
+  let idx = startIndex
+  while (idx + 1 < tokens.length) {
+    const prev = group.at(-1)!
+    const next = tokens[idx + 1]!
+    if (prev.range.end.offset !== next.range.start.offset) break
+    if (!isContiguousNodePart(next)) break
+    group.push(next)
+    idx += 1
+  }
+  if (group.length === 1) {
+    return { token: first, nextIndex: idx + 1 }
+  }
+  const raw = group.map((t) => t.raw).join("")
+  return {
+    token: {
+      type: "identifier",
+      raw,
+      value: raw,
+      range: {
+        start: first.range.start,
+        end: group.at(-1)!.range.end,
+      },
+    },
+    nextIndex: idx + 1,
+  }
+}
+
+function mergeCardNodeTokens(tokens: SpiceToken[]): SpiceToken[] {
+  if (tokens.length <= 1) return tokens
+  const head = tokens[0]!
+
+  if (head.type === "directive") {
+    if (head.value.toLowerCase() !== "subckt") return tokens
+    const result: SpiceToken[] = [head]
+    let idx = 1
+    while (idx < tokens.length) {
+      const nextTok = tokens[idx + 1]
+      if (
+        tokens[idx]?.raw.toLowerCase() === "params" &&
+        nextTok?.type === "punctuation" &&
+        nextTok.value === ":"
+      ) {
+        break
+      }
+      const { token, nextIndex } = readMergedGroup(tokens, idx)
+      const afterGroup = tokens[nextIndex]
+      if (afterGroup?.type === "operator" && afterGroup.value === "=") {
+        break
+      }
+      result.push(token)
+      idx = nextIndex
+    }
+    result.push(...tokens.slice(idx))
+    return result
+  }
+
+  if (head.type !== "identifier") return tokens
+
+  const designator = head.raw[0]?.toUpperCase() ?? ""
+  let targetNodes =
+    designator === "M" || designator === "Q"
+      ? 4
+      : designator === "X"
+        ? Number.POSITIVE_INFINITY
+        : 2
+
+  const result: SpiceToken[] = [head]
+  let idx = 1
+  let nodesRead = 0
+
+  while (idx < tokens.length && nodesRead < targetNodes) {
+    const { token, nextIndex } = readMergedGroup(tokens, idx)
+    if (
+      tokens[nextIndex]?.type === "operator" &&
+      tokens[nextIndex]?.value === "="
+    ) {
+      break
+    }
+    result.push(token)
+    idx = nextIndex
+    nodesRead += 1
+
+    if (
+      (designator === "E" || designator === "G") &&
+      nodesRead === 2 &&
+      targetNodes === 2 &&
+      idx < tokens.length
+    ) {
+      const peek = readMergedGroup(tokens, idx)
+      if (!abmForms.has(peek.token.raw.toUpperCase())) {
+        targetNodes = 4
+      }
+    }
+  }
+
+  result.push(...tokens.slice(idx))
+  return result
+}
+
 export class SpiceTokenCard {
   readonly tokens: SpiceToken[]
   readonly originalSource: string
 
   private constructor(private readonly card: SpiceLogicalCard) {
-    this.tokens = significantTokens(card.tokens)
+    this.tokens = mergeCardNodeTokens(significantTokens(card.tokens))
     this.originalSource = card.originalSource
   }
 
