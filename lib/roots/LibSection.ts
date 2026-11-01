@@ -17,10 +17,11 @@ export class LibSection extends SpiceNode {
   }
 
   toSource(options?: SpiceSerializeOptions): string {
+    const lineEnding = options?.lineEnding ?? "\n"
     return [
       `.lib ${this.name}`,
       ...this.cards.map((card) => card.toSource(options)),
       ".endl",
-    ].join("\n")
+    ].join(lineEnding)
   }
 }

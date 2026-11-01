@@ -112,17 +112,19 @@ export class SpiceNetlist extends SpiceNode {
   }
 
   toSource(options: SpiceSerializeOptions = {}): string {
+    const lineEnding = options.lineEnding ?? this.lineEnding
+    const childOptions: SpiceSerializeOptions = { ...options, lineEnding }
     const endMode = options.end ?? "auto"
     const lines = [
       this.title,
-      ...this.cards.map((card) => card.toSource(options)),
+      ...this.cards.map((card) => card.toSource(childOptions)),
       endMode === "never"
         ? undefined
         : endMode === "always"
-          ? (this.end ?? new End()).toSource(options)
-          : this.end?.toSource(options),
+          ? (this.end ?? new End()).toSource(childOptions)
+          : this.end?.toSource(childOptions),
     ].filter((line): line is string => line !== undefined)
-    const source = lines.join(this.lineEnding)
-    return this.trailingNewline ? `${source}${this.lineEnding}` : source
+    const source = lines.join(lineEnding)
+    return this.trailingNewline ? `${source}${lineEnding}` : source
   }
 }
