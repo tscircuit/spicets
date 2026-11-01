@@ -1,5 +1,5 @@
 import { expect, test } from "bun:test"
-import { Op, SpiceNetlist, Tran } from "lib"
+import { BlankLine, Op, SpiceNetlist, Tran } from "lib"
 
 test("supports add and addAll mutation", () => {
   const netlist = new SpiceNetlist({ end: false, trailingNewline: false })
@@ -9,4 +9,18 @@ test("supports add and addAll mutation", () => {
   expect(addResult).toBeUndefined()
   expect(addAllResult).toBeUndefined()
   expect(netlist.getString({ format: "pretty" })).toBe(".op\n.tran 1n 1u")
+})
+
+test("supports addAll with large card arrays and self-append", () => {
+  const netlist = new SpiceNetlist({ end: false })
+  const cards = Array.from({ length: 180_000 }, () => new BlankLine())
+  netlist.addAll(cards)
+  expect(netlist.cards).toHaveLength(180_000)
+
+  const selfNetlist = new SpiceNetlist({
+    end: false,
+    cards: [new Op(), new Tran({ step: "1n", stop: "1u" })],
+  })
+  selfNetlist.addAll(selfNetlist.cards)
+  expect(selfNetlist.cards).toHaveLength(4)
 })

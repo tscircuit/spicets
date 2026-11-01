@@ -73,7 +73,10 @@ export class SpiceNetlist extends SpiceNode {
   }
 
   addAll(cards: SpiceCardInput[]): void {
-    this.cards.push(...cards)
+    const count = cards.length
+    for (let i = 0; i < count; i += 1) {
+      this.cards.push(cards[i]!)
+    }
   }
 
   findElement(name: string): ElementCard | undefined {
