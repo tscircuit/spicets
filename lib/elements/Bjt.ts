@@ -33,7 +33,15 @@ export class Bjt extends ElementCard {
 
   static fromSpiceTokens(card: SpiceLogicalCard): Bjt {
     const tokens = SpiceTokenCard.from(card)
-    const hasSubstrate = tokens.args().length > 4
+    const fifthArg = tokens.arg(4)
+    const tokenAfterFifthArg = tokens.tokens[6]
+    const fifthArgIsParamAssignment =
+      tokenAfterFifthArg?.type === "operator" &&
+      tokenAfterFifthArg.value === "="
+    const hasSubstrate =
+      fifthArg !== undefined &&
+      !fifthArgIsParamAssignment &&
+      fifthArg.toLowerCase() !== "off"
     const nodes: [string, string, string, string?] = hasSubstrate
       ? [
           tokens.arg(0) ?? "",
