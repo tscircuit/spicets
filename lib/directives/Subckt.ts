@@ -82,7 +82,7 @@ export class Subckt extends DotCommand {
         .join(" "),
       ...this.cards.map((card) => card.toSource(options)),
       [".ends", this.endsName ?? this.name].join(" "),
-    ].join("\n")
+    ].join(options?.lineEnding ?? "\n")
   }
 }
 DotCommand.register(Subckt)

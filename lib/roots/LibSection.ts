@@ -21,6 +21,6 @@ export class LibSection extends SpiceNode {
       `.lib ${this.name}`,
       ...this.cards.map((card) => card.toSource(options)),
       ".endl",
-    ].join("\n")
+    ].join(options?.lineEnding ?? "\n")
   }
 }
