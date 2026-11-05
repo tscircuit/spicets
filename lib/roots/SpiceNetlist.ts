@@ -112,6 +112,7 @@ export class SpiceNetlist extends SpiceNode {
   }
 
   toSource(options: SpiceSerializeOptions = {}): string {
+    options = { lineEnding: this.lineEnding, ...options }
     const endMode = options.end ?? "auto"
     const lines = [
       this.title,

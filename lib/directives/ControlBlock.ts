@@ -33,7 +33,9 @@ export class ControlBlock extends DotCommand {
   toSource(options?: SpiceSerializeOptions): string {
     if (options?.format !== "pretty" && this.originalSource !== undefined)
       return this.originalSource
-    return [this.command, ...this.lines, ".endc"].join("\n")
+    return [this.command, ...this.lines, ".endc"].join(
+      options?.lineEnding ?? "\n",
+    )
   }
 }
 DotCommand.register(ControlBlock)
