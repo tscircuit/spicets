@@ -1,0 +1,25 @@
+// Bun Snapshot v1, https://bun.sh/docs/test/snapshots
+
+exports[`braced switch-model parameters survive parsing and serialization 1`] = `
+{
+  "parameters": [
+    [
+      "RON",
+      "{max",
+    ],
+    [
+      "ROFF",
+      "{1e3",
+    ],
+    [
+      "VON",
+      "{if",
+    ],
+    [
+      "VOFF",
+      "0",
+    ],
+  ],
+  "serialized": ".model isolation VSWITCH (RON={max ROFF={1e3 VON={if VOFF=0)",
+}
+`;
