@@ -7,6 +7,31 @@ type KeywordMatch = {
   tokenCount: number
 }
 
+const parameterExpressionOperators = new Set([
+  "%",
+  "<",
+  "<=",
+  ">",
+  ">=",
+  "==",
+  "!=",
+  "<>",
+  "&",
+  "&&",
+  "|",
+  "||",
+  "!",
+  "~",
+  "?",
+  ":",
+])
+
+function isParameterExpressionOperator(token: SpiceToken): boolean {
+  return (
+    token.type === "operator" || parameterExpressionOperators.has(token.raw)
+  )
+}
+
 function tokenText(token: SpiceToken | undefined): string | undefined {
   return tokenValue(token)
 }
@@ -190,6 +215,19 @@ export class SpiceTokenCard {
           if (braces === 0 && parentheses === 0) {
             if (token.raw === "," || token.raw === ")") break
             if (end > index + 2 && this.tokens[end + 1]?.raw === "=") break
+            if (end > index + 2) {
+              const previousToken = this.tokens[end - 1]!
+              // A bare name after a complete expression is a separate argument.
+              // Operators can still continue an unquoted expression.
+              if (
+                token.type === "identifier" &&
+                token.range.start.offset > previousToken.range.end.offset &&
+                !isParameterExpressionOperator(token) &&
+                !isParameterExpressionOperator(previousToken)
+              ) {
+                break
+              }
+            }
           }
           if (token.type !== "string") {
             for (const char of token.raw) {
