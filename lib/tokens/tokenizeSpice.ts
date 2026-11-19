@@ -8,7 +8,7 @@ import type {
 } from "./types"
 
 const numberPattern =
-  /^[+-]?(?:(?:\d+(?:\.\d*)?)|(?:\.\d+))(?:[eE][+-]?\d+)?([a-zA-Z]+)?$/
+  /^[+-]?(?:(?:\d+(?:\.\d*)?)|(?:\.\d+))(?:[eE][+-]?\d+)?([a-zA-Zµμ]+)?$/
 const operatorChars = new Set(["=", "+", "-", "*", "/", "^"])
 const punctuationChars = new Set(["(", ")", ",", ":"])
 const suffixScale: Record<string, number> = {
@@ -122,24 +122,35 @@ export function tokenizeSpice(
         source[offset]! <= "z") ||
       (source[offset] !== undefined &&
         source[offset]! >= "A" &&
-        source[offset]! <= "Z")
+        source[offset]! <= "Z") ||
+      source[offset] === "µ" ||
+      source[offset] === "μ"
     ) {
       raw += source[offset]
       advance(source[offset]!)
     }
     return raw
   }
+  // SPICE reads a numeric suffix as the longest known scale prefix and
+  // ignores trailing unit letters: 10uF == 10u, 4.7kohm == 4.7k,
+  // 1megohm == 1meg. The micro signs µ (U+00B5) and μ (U+03BC) alias "u".
+  const resolveSuffixScale = (unitSuffix: string | undefined): number => {
+    if (unitSuffix === undefined) return 1
+    const lower = unitSuffix.toLowerCase().replace(/[µμ]/g, "u")
+    if (lower.length === 0) return 1
+    if (lower.startsWith("meg")) return suffixScale.meg!
+    return suffixScale[lower[0]!] ?? 1
+  }
   const pushNumberToken = (raw: string, range: SourceRange) => {
     const numberMatch = raw.match(numberPattern)
     if (!numberMatch) return false
     const unitSuffix = numberMatch[1]
-    const suffix = unitSuffix?.toLowerCase()
     const numericRaw =
       unitSuffix === undefined ? raw : raw.slice(0, -unitSuffix.length)
     const baseValue = Number(numericRaw)
     const value =
       normalizeNumbers && !Number.isNaN(baseValue)
-        ? baseValue * (suffix === undefined ? 1 : (suffixScale[suffix] ?? 1))
+        ? baseValue * resolveSuffixScale(unitSuffix)
         : null
     pushToken({
       type: "number",
