@@ -17,13 +17,7 @@ This repository uses [Bun](https://bun.sh) for scripts and testing.
 
 ```ts
 import { promises as fs } from "node:fs"
-import {
-  Capacitor,
-  Resistor,
-  SpiceNetlist,
-  Tran,
-  VoltageSource,
-} from "spicets"
+import { Capacitor, Resistor, SpiceNetlist, Tran, VoltageSource } from "spicets"
 
 const netlist = new SpiceNetlist({
   title: "RC low-pass demo",
@@ -88,7 +82,14 @@ await fs.writeFile("amplifier.cir", netlist.getString())
 ## Subcircuits
 
 ```ts
-import { Op, Resistor, SpiceNetlist, Subckt, SubcktInstance, VoltageSource } from "spicets"
+import {
+  Op,
+  Resistor,
+  SpiceNetlist,
+  Subckt,
+  SubcktInstance,
+  VoltageSource,
+} from "spicets"
 
 const divider = new Subckt({
   name: "divider",
