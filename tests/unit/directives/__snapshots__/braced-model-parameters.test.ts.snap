@@ -5,21 +5,21 @@ exports[`braced switch-model parameters survive parsing and serialization 1`] = 
   "parameters": [
     [
       "RON",
-      "{max",
+      "{max(1e6, 1)}",
     ],
     [
       "ROFF",
-      "{1e3",
+      "{1e3 * (2 + 3)}",
     ],
     [
       "VON",
-      "{if",
+      "{if({mode} > 0, 1m, 2m)}",
     ],
     [
       "VOFF",
       "0",
     ],
   ],
-  "serialized": ".model isolation VSWITCH (RON={max ROFF={1e3 VON={if VOFF=0)",
+  "serialized": ".model isolation VSWITCH (RON={max(1e6, 1)} ROFF={1e3 * (2 + 3)} VON={if({mode} > 0, 1m, 2m)} VOFF=0)",
 }
 `;
