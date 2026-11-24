@@ -23,12 +23,16 @@ export function parseIndependentSourceValues(
 ): ParsedIndependentSourceValues {
   const values: ParsedIndependentSourceValues = {}
   const explicitDcValue = tokens.argAfterKeyword("dc")
+  const positionalDcValue = tokens.arg(2)
   const acKeywordArgIndex = tokens.keywordIndex("ac")
 
   if (explicitDcValue !== undefined) {
     values.dc = explicitDcValue
-  } else if (acKeywordArgIndex === -1) {
-    values.dc = tokens.arg(2)
+  } else if (
+    positionalDcValue !== undefined &&
+    positionalDcValue.toLowerCase() !== "ac"
+  ) {
+    values.dc = positionalDcValue
   }
 
   if (acKeywordArgIndex !== -1) {
